@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Awesome project developed with TypeORM.",
   "devDependencies": {
-    "@types/node": "^14.14.37",
+    "@types/node": "^8.0.29",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
     "typescript": "^4.2.4"
@@ -11,11 +11,12 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "fastify": "^3.14.2",
-    "reflect-metadata": "^0.1.13"
+    "mysql": "^2.14.1",
+    "reflect-metadata": "^0.1.10",
+    "typeorm": "0.2.32"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "TS_NODE=1 NODE_PATH=src ts-node --transpile-only src/index.ts | pino-pretty -c -t",
-    "start:dev": "TS_NODE=1 NODE_PATH=src ts-node-dev --respawn --transpile-only src/index.ts | pino-pretty"
+    "start": "ts-node src/index.ts | pino-pretty -c -t",
+    "start:dev": "ts-node-dev --respawn --transpile-only src/index.ts | pino-pretty"
   }
 }

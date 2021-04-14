@@ -18,7 +18,6 @@ export default class Server {
   start() {
     try {
       this.app.listen(PORT)
-      this.app.log.info(`Server is running with port ${PORT}`)
     } catch (e) {
       this.app.log.error(e)
     }
