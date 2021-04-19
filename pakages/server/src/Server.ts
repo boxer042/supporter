@@ -1,4 +1,5 @@
 import fastify from 'fastify'
+import apiRoute from './routes/api'
 
 const PORT = parseInt(process.env.PORT!, 10)
 
@@ -10,6 +11,7 @@ export default class Server {
   }
 
   setup() {
+    this.app.register(apiRoute, { prefix: '/api' })
     this.app.get('/', (request, reply) => {
       reply.send({ hello: 'world' })
     })
