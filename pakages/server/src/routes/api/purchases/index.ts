@@ -11,7 +11,7 @@ const purchasesRoute: FastifyPluginCallback = (fastify, apts, done) => {
   const purchaseRepo = getRepository(Purchase)
   const purchasePriceHistoryRepo = getRepository(PurchasePriceHistory)
 
-  fastify.get('/', async (request, reply) => {
+  fastify.get('/products', async (request, reply) => {
     const purchaseProducts = await purchaseProductRepo.find({
       relations: ['account'],
     })
