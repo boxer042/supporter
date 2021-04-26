@@ -2,14 +2,20 @@
   "type": "mariadb",
   "host": "localhost",
   "port": 3306,
-  "username": "supporter",
-  "password": "dldbcks!!",
+  "username": "root",
+  "password": "dldbcks123!!",
   "database": "supporter",
   "synchronize": true,
   "logging": false,
-  "entities": ["src/entity/**/*.ts"],
-  "migrations": ["src/migration/**/*.ts"],
-  "subscribers": ["src/subscriber/**/*.ts"],
+  "entities": [
+    "src/entity/**/*.ts"
+  ],
+  "migrations": [
+    "src/migration/**/*.ts"
+  ],
+  "subscribers": [
+    "src/subscriber/**/*.ts"
+  ],
   "cli": {
     "entitiesDir": "src/entity",
     "migrationsDir": "src/migration",

@@ -19,10 +19,10 @@ export class Account {
   @Column()
   name: string
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   office: string
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   fax: string
 
   @Column({ type: 'varchar', nullable: true })

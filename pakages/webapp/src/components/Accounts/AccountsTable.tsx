@@ -24,7 +24,7 @@ function AccountsTable(props: AccountsTableProps) {
     getAccountsData()
   }, [setAccounts])
 
-  const onOpen = (id: number) => {
+  const onOpen = (id?: number) => {
     history.push(`/account/${id}`)
     // openAccount(id)
   }
@@ -34,10 +34,10 @@ function AccountsTable(props: AccountsTableProps) {
       <table css={table}>
         <thead>
           <tr>
-            <th>상호</th>
-            <th>전화번호</th>
-            <th>팩스</th>
-            <th>휴대폰</th>
+            <th>거래처명</th>
+            <th>사무실 번호</th>
+            <th>팩스 번호</th>
+            <th>휴대폰 번호</th>
           </tr>
         </thead>
         <tbody>
@@ -63,7 +63,6 @@ const table = css`
   border-collapse: collapse;
   text-align: left;
   width: 100%;
-
   td,
   th {
     padding: 0.625rem;
@@ -72,6 +71,9 @@ const table = css`
   thead {
     border-bottom: 1px solid ${palette.grey[200]};
     color: ${palette.grey[600]};
+    tr {
+      /* background: ${palette.grey[300]}; */
+    }
     th {
       font-weight: normal;
     }
@@ -83,8 +85,7 @@ const table = css`
     &:hover {
       background: ${palette.grey[100]};
     }
-    td {
-      width: 100%;
-    }
+  }
+  td:last-of-type {
   }
 `

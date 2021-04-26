@@ -81,10 +81,7 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
       account.fax = fax
       account.phone = phone
       await accountsRepo.save(account)
-
-      reply.send({
-        account: account,
-      })
+      reply.send(account)
     } catch (error) {
       reply.status(401)
       reply.send({

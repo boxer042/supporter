@@ -18,8 +18,8 @@ function AccountsSidebar({}: AccountsSidebarProps) {
   }
 
   return (
-    <div css={blockStyle}>
-      <div css={headerStyle}>거래처</div>
+    <div css={block}>
+      <h1>거래처</h1>
       <div css={addAccount(mode)} onClick={onClick}>
         <IoPersonAddSharp />
         <span>거래처 추가하기</span>
@@ -30,20 +30,7 @@ function AccountsSidebar({}: AccountsSidebarProps) {
 
 export default AccountsSidebar
 
-const blockStyle = css`
-  height: calc(100vh - 4rem);
-  border-right: 1px solid ${palette.grey[300]};
-  padding-top: 3rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  display: flex;
-  flex-direction: column;
-`
-
-const headerStyle = css`
-  font-size: 1.5rem;
-  font-weight: bold;
-`
+const block = css``
 
 const addAccount = (mode: string) => css`
   margin-top: 1rem;
@@ -51,8 +38,8 @@ const addAccount = (mode: string) => css`
   cursor: pointer;
   align-items: center;
   font-size: 1.125rem;
-  color: ${palette.grey[600]};
-  font-weight: bold;
+  color: ${palette.grey[700]};
+
   span {
     margin-left: 0.5rem;
   }

@@ -1,11 +1,11 @@
 export type Account = {
-  id: number
+  id?: number
   name: string
   office: string | null
   fax: string | null
   phone: string | null
-  metadata: Metadata | null
-  handling_products: HandlingProducts[] | null
+  metadata?: Metadata | null
+  handling_products?: HandlingProducts[] | null
 }
 
 export type Metadata = {

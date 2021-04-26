@@ -9,7 +9,7 @@ function ProductsSidebar({}: ProductsSidebarProps) {
   return (
     <div css={block}>
       <NavLink to="/product">상품</NavLink>
-      <NavLink to="/product/purchase">공급받는 상품</NavLink>
+      <NavLink to="/product/purchase">구매 상품</NavLink>
       <div>판매 상품</div>
     </div>
   )

@@ -37,9 +37,9 @@ function ProductsPurchase(props: ProductsPurchaseProps) {
               <th>보유 재고</th>
               <th>단가</th>
               <th>할인</th>
-              <th>매입 가액</th>
-              <th>매입 세액</th>
-              <th>매입 가격</th>
+              <th>구매 가액</th>
+              <th>구매 세액</th>
+              <th>구매 가격</th>
               <th>상태</th>
             </tr>
           </thead>
@@ -70,7 +70,7 @@ export default ProductsPurchase
 const table = css`
   border-collapse: collapse;
   text-align: left;
-
+  width: 100%;
   td,
   th {
     padding: 0.625rem;

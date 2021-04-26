@@ -29,10 +29,7 @@ function Footer({ children }: FooterProps) {
 AppLayout.Main = Main
 AppLayout.Footer = Footer
 
-const mainStyle = css`
-  width: 100%;
-  height: calc(100vh - 4rem);
-`
+const mainStyle = css``
 
 const footerStyle = css`
   display: flex;
