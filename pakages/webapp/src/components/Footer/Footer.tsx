@@ -23,7 +23,7 @@ function Footer(props: Footerprops) {
         <FooterItem
           reactIcon={<IoCalculatorSharp />}
           text="매입"
-          to="/purchases"
+          to="/purchase"
         />
 
         <FooterItem

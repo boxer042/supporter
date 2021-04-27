@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
 import { getAccounts } from '../../lib/api/accounts/getAccounts'
-import { useAccountsState } from './../../atoms/acccountsState'
+import {
+  useAccountsState,
+  useSearchedAccountsValue,
+} from './../../atoms/acccountsState'
 import { css } from '@emotion/react'
 import palette from '../../foundations/palette'
 import { formattedPhone } from './../../lib/api/utils/formattedPhone'
@@ -13,6 +16,7 @@ export type AccountsTableProps = {}
 
 function AccountsTable(props: AccountsTableProps) {
   const [accounts, setAccounts] = useAccountsState()
+  const accountsList = useSearchedAccountsValue()
   const { openAccount } = useAccountsViewAcions()
   const history = useHistory()
 
@@ -41,7 +45,7 @@ function AccountsTable(props: AccountsTableProps) {
           </tr>
         </thead>
         <tbody>
-          {accounts.map((account) => (
+          {accountsList.map((account) => (
             <tr key={account.id} onClick={() => onOpen(account.id)}>
               <td>{account.name}</td>
               <td>{formattedPhone(account.office)}</td>

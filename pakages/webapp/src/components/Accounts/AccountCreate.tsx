@@ -7,6 +7,9 @@ import { resetButton } from './../../foundations/resetButton'
 import { useAccountsState } from '../../atoms/acccountsState'
 import { MdArrowBack } from 'react-icons/md'
 import { createAccount } from '../../lib/api/accounts/createAccount'
+import { Metadata } from '../../lib/api/accounts/types'
+import { addMetadata } from '../../lib/api/accounts/addMetadata'
+import { useHistory } from 'react-router'
 
 export type AccountCreateProps = {}
 
@@ -17,8 +20,17 @@ function AccountCreate(props: AccountCreateProps) {
     fax: '',
     phone: '',
   })
+  const [detailInputs, setDetailInputs] = useState<Metadata>({
+    account_id: null,
+    crn: '',
+    representatives: '',
+    address: '',
+    category: '',
+    category_type: '',
+  })
   const [accounts, setAccounts] = useAccountsState()
   const { closeAccount } = useAccountsViewAcions()
+  const history = useHistory()
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +39,12 @@ function AccountCreate(props: AccountCreateProps) {
         ...inputs,
         [name]: value,
       })
+      setDetailInputs({
+        ...detailInputs,
+        [name]: value,
+      })
     },
-    [inputs]
+    [inputs, detailInputs]
   )
 
   const onCreate = useCallback(async () => {
@@ -38,13 +54,48 @@ function AccountCreate(props: AccountCreateProps) {
       fax: inputs.fax,
       phone: inputs.phone,
     }
-    const createdAccount = await createAccount(account)
-
-    setAccounts((prevAccounts) => [...prevAccounts, createdAccount])
-  }, [inputs.name, inputs.office, inputs.fax, inputs.phone, setAccounts])
+    const detail = {
+      accountId: '',
+      crn: detailInputs.crn,
+      representatives: detailInputs.representatives,
+      address: detailInputs.address,
+      category: detailInputs.category,
+      category_type: detailInputs.category_type,
+    }
+    try {
+      const createdAccount = await createAccount(account)
+      if (detail.crn.length || detail.address.length > 0) {
+        await addMetadata({
+          account_id: createdAccount.id,
+          crn: detail.crn,
+          representatives: detail.representatives,
+          address: detail.address,
+          category: detail.category,
+          category_type: detail.category_type,
+        })
+      }
+      setAccounts((prevAccounts) => [...prevAccounts, createdAccount])
+      history.replace('/account')
+    } catch (error) {
+      console.log(error)
+    }
+  }, [
+    inputs.name,
+    inputs.office,
+    inputs.fax,
+    inputs.phone,
+    detailInputs.crn,
+    detailInputs.address,
+    detailInputs.representatives,
+    detailInputs.category,
+    detailInputs.category_type,
+    setAccounts,
+    history,
+  ])
 
   const onCancel = () => {
-    closeAccount()
+    // closeAccount()
+    history.goBack()
   }
 
   return (
@@ -69,6 +120,45 @@ function AccountCreate(props: AccountCreateProps) {
         <div>
           <div>휴대폰 번호</div>
           <input name="phone" value={inputs.phone} onChange={onChange} />
+        </div>
+      </div>
+      <h2>거래처 상세정보</h2>
+      <div>
+        <div>
+          <div>사업자등록번호</div>
+          <input name="crn" value={detailInputs.crn} onChange={onChange} />
+        </div>
+        <div>
+          <div>대표자</div>
+          <input
+            name="representatives"
+            value={detailInputs.representatives}
+            onChange={onChange}
+          />
+        </div>
+        <div>
+          <div>사업장 소재지</div>
+          <input
+            name="address"
+            value={detailInputs.address}
+            onChange={onChange}
+          />
+        </div>
+        <div>
+          <div>업태</div>
+          <input
+            name="category"
+            value={detailInputs.category}
+            onChange={onChange}
+          />
+        </div>
+        <div>
+          <div>종목</div>
+          <input
+            name="category_type"
+            value={detailInputs.category_type}
+            onChange={onChange}
+          />
         </div>
       </div>
       <button onClick={onCreate}>추가하기</button>

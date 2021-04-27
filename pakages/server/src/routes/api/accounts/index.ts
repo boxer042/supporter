@@ -2,8 +2,27 @@ import { FastifyPluginCallback } from 'fastify'
 import { getRepository } from 'typeorm'
 import { Account } from './../../../entity/Account'
 import { AccountMeta } from './../../../entity/AccountMeta'
+import qs from 'query-string'
 
 const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
+  fastify.get<{ Querystring: { keyword: string } }>(
+    '/search',
+    (request, reply) => {
+      const search = request.query.keyword.trim()
+      const results = fastify.searchEngine
+        .search(search)
+        .slice(0, 10)
+        .map((result) => ({
+          id: result.item.id,
+          name: result.item.name,
+          office: result.item.office,
+          fax: result.item.fax,
+          phone: result.item.phone,
+          handling_products: result.item.handling_products,
+        }))
+      reply.send(results)
+    }
+  )
   /**
    * GET /api/accounts
    * Accounts List
@@ -93,21 +112,21 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
   })
 
   /**
-   * POST /api/accounts/:id/metadata/add
+   * POST /api/accounts/metadata/add
    * Add metadata to account
    */
   fastify.post<{
-    Params: { id: number }
     Body: {
+      account_id: number
       crn: string
       representatives: string
       address: string
       category: string
       category_type: string
     }
-  }>('/:id/metadata/add', async (request, reply) => {
-    const accountId = request.params.id
+  }>('/metadata/add', async (request, reply) => {
     const {
+      account_id,
       crn,
       representatives,
       address,
@@ -119,7 +138,7 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
       const accountsRepo = getRepository(Account)
       const accountsMetaRepo = getRepository(AccountMeta)
 
-      const account = await accountsRepo.findOne(accountId, {
+      const account = await accountsRepo.findOne(account_id, {
         relations: ['metadata', 'handling_products'],
       })
       if (!account) {

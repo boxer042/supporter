@@ -19,6 +19,7 @@ function App() {
             '/account/:id',
             '/product',
             '/product/purchase',
+            '/purchase',
           ]}
           exact
         >
@@ -34,7 +35,7 @@ function App() {
                 <Route path={['/product', '/product/purchase']} exact>
                   <Product />
                 </Route>
-                <Route path={['/purchases', '/purchases/:id']} exact>
+                <Route path={['/purchase', '/purchases/:id']} exact>
                   <Purchase />
                 </Route>
               </Switch>

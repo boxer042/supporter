@@ -5,6 +5,7 @@ import { Route, Switch, useParams } from 'react-router-dom'
 import AccountMetadata from '../../components/Accounts/AccountMetadata'
 import { css } from '@emotion/react'
 import palette from '../../foundations/palette'
+import AccountCreate from '../../components/Accounts/AccountCreate'
 
 export type Accountprops = {}
 type AccountParams = {
@@ -23,6 +24,9 @@ function Account(props: Accountprops) {
         <Switch>
           <Route path="/account" exact>
             <Accounts />
+          </Route>
+          <Route path="/account/create">
+            <AccountCreate />
           </Route>
           <Route path="/account/:id">
             <AccountMetadata accountId={accountId} />

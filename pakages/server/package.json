@@ -12,7 +12,9 @@
     "dotenv": "^8.2.0",
     "fastify": "^3.14.2",
     "fastify-cors": "^5.2.0",
+    "fuse.js": "^6.4.6",
     "mysql": "^2.14.1",
+    "query-string": "^7.0.0",
     "reflect-metadata": "^0.1.10",
     "typeorm": "0.2.32"
   },

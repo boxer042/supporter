@@ -9,7 +9,8 @@ export type Account = {
 }
 
 export type Metadata = {
-  id: number
+  account_id?: number | null
+  id?: number
   crn: string
   representatives: string
   address: string

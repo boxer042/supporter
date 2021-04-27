@@ -1,6 +1,7 @@
 import fastify from 'fastify'
 import apiRoute from './routes/api'
 import corsPlugin from 'fastify-cors'
+import searchPlugin from './plugins/searchPlugin'
 
 const PORT = parseInt(process.env.PORT!, 10)
 
@@ -24,17 +25,14 @@ export default class Server {
       },
       credentials: true,
     })
+    this.app.register(searchPlugin)
     this.app.register(apiRoute, { prefix: '/api' })
-    this.app.get('/', (request, reply) => {
-      reply.send({ hello: 'world' })
-    })
   }
 
   start() {
-    try {
-      this.app.listen(PORT)
-    } catch (e) {
-      this.app.log.error(e)
-    }
+    this.app.listen(PORT)
+  }
+  close() {
+    return this.app.close()
   }
 }

@@ -1,5 +1,11 @@
 import { useCallback } from 'react'
-import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import {
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil'
 import { getAccounts } from '../lib/api/accounts/getAccounts'
 import { Account } from '../lib/api/accounts/types'
 import { useAccountsViewUpdate } from './accountsViewState'
@@ -7,6 +13,11 @@ import { useAccountsViewUpdate } from './accountsViewState'
 export const accountsState = atom<Account[]>({
   key: 'accountsState',
   default: [],
+})
+
+export const accountsSearchState = atom({
+  key: 'accountsSearchState',
+  default: '',
 })
 
 export const accountMetadataState = atom<Account>({
@@ -21,6 +32,31 @@ export const accountMetadataState = atom<Account>({
     handling_products: null,
   },
 })
+
+export const searchedAccountsState = selector({
+  key: 'searchedAccountsState',
+  get: ({ get }) => {
+    const search = get(accountsSearchState)
+    const list = get(accountsState)
+    if (search.length > 0) {
+      return list.filter((item) => item.name.includes(search))
+    }
+    return list
+    // if (search.length > 0) {
+    //   return console.log(search)
+    // } else {
+    //   return list
+    // }
+  },
+})
+
+export function useAccountsSearchState() {
+  return useRecoilState(accountsSearchState)
+}
+
+export function useSearchedAccountsValue() {
+  return useRecoilValue(searchedAccountsState)
+}
 
 export function useAccountsState() {
   return useRecoilState(accountsState)
