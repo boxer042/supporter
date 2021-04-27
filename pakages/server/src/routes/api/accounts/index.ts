@@ -2,13 +2,12 @@ import { FastifyPluginCallback } from 'fastify'
 import { getRepository } from 'typeorm'
 import { Account } from './../../../entity/Account'
 import { AccountMeta } from './../../../entity/AccountMeta'
-import qs from 'query-string'
 
 const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
   fastify.get<{ Querystring: { keyword: string } }>(
     '/search',
     (request, reply) => {
-      const search = request.query.keyword.trim()
+      const search = request.query.keyword
       const results = fastify.searchEngine
         .search(search)
         .slice(0, 10)

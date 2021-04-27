@@ -27,7 +27,8 @@ const itemStyle = css`
 `
 
 const linkStyle = css`
-  color: ${palette.blueGrey[400]};
+  color: #625dff;
+
   display: flex;
   flex-direction: column;
   width: 5rem;
@@ -40,9 +41,14 @@ const linkStyle = css`
   span {
     margin-top: 0.2rem;
     font-size: 0.75rem;
+    color: ${palette.blueGrey[400]};
   }
   &.active {
-    color: ${palette.blueGrey[900]};
+    /* color: ${palette.blueGrey[900]}; */
+    color: #ff8bb8;
+    span {
+      color: #ff8bb8;
+    }
   }
 `
 
