@@ -15,6 +15,9 @@ export class Account {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ nullable: true })
+  thumbnail: string
+
   @Index({ unique: true })
   @Column()
   name: string

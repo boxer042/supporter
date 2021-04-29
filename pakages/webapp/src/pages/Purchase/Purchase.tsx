@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import SearchedAccountInput from '../../components/Inputs/SearchedAccountInput'
+import React from 'react'
 import Purchaes from '../../components/Purchases/Purchaes'
-import { getPurchaseProducts } from '../../lib/api/products/getPurchaseProducts'
 
 export type PurchaseProps = {}
 

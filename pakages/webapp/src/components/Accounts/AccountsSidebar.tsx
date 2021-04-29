@@ -8,6 +8,7 @@ import {
 } from './../../atoms/accountsViewState'
 import { NavLink } from 'react-router-dom'
 import { useAccountsSearchState } from './../../atoms/acccountsState'
+import Input from '../Input/Input'
 
 export type AccountsSidebarProps = {}
 
@@ -27,7 +28,6 @@ function AccountsSidebar({}: AccountsSidebarProps) {
     [setSearch]
   )
 
-  console.log(search)
   return (
     <div css={block}>
       <h1>거래처</h1>
@@ -39,7 +39,7 @@ function AccountsSidebar({}: AccountsSidebarProps) {
         <IoPersonAddSharp />
         <span>거래처 추가하기</span>
       </NavLink>
-      <input value={search} onChange={onChange} placeholder="거래처 검색" />
+      <Input value={search} placeholder="거래처 검색" onChange={onChange} />
     </div>
   )
 }

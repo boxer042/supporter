@@ -10,6 +10,7 @@ import { createAccount } from '../../lib/api/accounts/createAccount'
 import { Metadata } from '../../lib/api/accounts/types'
 import { addMetadata } from '../../lib/api/accounts/addMetadata'
 import { useHistory } from 'react-router'
+import Input from '../Input/Input'
 
 export type AccountCreateProps = {}
 
@@ -104,33 +105,34 @@ function AccountCreate(props: AccountCreateProps) {
         <MdArrowBack />
       </button>
       <h1>거래처 추가하기</h1>
+      <h2>기본정보</h2>
       <div>
         <div>
           <div>거래처명</div>
-          <input name="name" value={inputs.name} onChange={onChange} />
+          <Input name="name" value={inputs.name} onChange={onChange} />
         </div>
         <div>
           <div>사무실 번호</div>
-          <input name="office" value={inputs.office} onChange={onChange} />
+          <Input name="office" value={inputs.office} onChange={onChange} />
         </div>
         <div>
           <div>팩스 번호</div>
-          <input name="fax" value={inputs.fax} onChange={onChange} />
+          <Input name="fax" value={inputs.fax} onChange={onChange} />
         </div>
         <div>
           <div>휴대폰 번호</div>
-          <input name="phone" value={inputs.phone} onChange={onChange} />
+          <Input name="phone" value={inputs.phone} onChange={onChange} />
         </div>
       </div>
-      <h2>거래처 상세정보</h2>
+      <h2>상세정보</h2>
       <div>
         <div>
           <div>사업자등록번호</div>
-          <input name="crn" value={detailInputs.crn} onChange={onChange} />
+          <Input name="crn" value={detailInputs.crn} onChange={onChange} />
         </div>
         <div>
           <div>대표자</div>
-          <input
+          <Input
             name="representatives"
             value={detailInputs.representatives}
             onChange={onChange}
@@ -138,7 +140,7 @@ function AccountCreate(props: AccountCreateProps) {
         </div>
         <div>
           <div>사업장 소재지</div>
-          <input
+          <Input
             name="address"
             value={detailInputs.address}
             onChange={onChange}
@@ -146,7 +148,7 @@ function AccountCreate(props: AccountCreateProps) {
         </div>
         <div>
           <div>업태</div>
-          <input
+          <Input
             name="category"
             value={detailInputs.category}
             onChange={onChange}
@@ -154,7 +156,7 @@ function AccountCreate(props: AccountCreateProps) {
         </div>
         <div>
           <div>종목</div>
-          <input
+          <Input
             name="category_type"
             value={detailInputs.category_type}
             onChange={onChange}

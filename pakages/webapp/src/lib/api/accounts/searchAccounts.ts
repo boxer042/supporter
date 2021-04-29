@@ -14,6 +14,10 @@ export async function searchAccounts(keyword: string) {
 
 export type SearchAccountsResult = {
   id: number
+  thumbnail: string
   name: string
   office: string
+  metadata?: {
+    address?: string
+  }
 }

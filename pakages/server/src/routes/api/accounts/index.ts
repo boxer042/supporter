@@ -13,10 +13,12 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
         .slice(0, 10)
         .map((result) => ({
           id: result.item.id,
+          thumbnail: result.item.thumbnail,
           name: result.item.name,
           office: result.item.office,
           fax: result.item.fax,
           phone: result.item.phone,
+          metadata: result.item.metadata,
           handling_products: result.item.handling_products,
         }))
       reply.send(results)
