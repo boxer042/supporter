@@ -9,7 +9,7 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
     (request, reply) => {
       const search = request.query.keyword
       const results = fastify.searchEngine
-        .search(search)
+        .searchAccounts(search)
         .slice(0, 10)
         .map((result) => ({
           id: result.item.id,

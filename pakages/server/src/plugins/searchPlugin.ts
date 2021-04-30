@@ -5,7 +5,8 @@ import SearchEngine from '../search/SearchEngine'
 const callback: FastifyPluginCallback = async (fastify, opts, done) => {
   fastify.decorate('something', () => {})
   const searchEngine = new SearchEngine()
-  await searchEngine.initialize()
+  await searchEngine.account()
+  await searchEngine.purchasesProducts()
   fastify.decorate('searchEngine', searchEngine)
   done()
 }

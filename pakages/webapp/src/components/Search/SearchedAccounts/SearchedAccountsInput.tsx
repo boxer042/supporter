@@ -9,7 +9,7 @@ import {
   useSelectedAccountsActions,
 } from '../../../atoms/selectedAccountsState'
 
-export type SearchedAccountsInputProps = {}
+export type SearchedAccountsInputProps = {} & React.HTMLAttributes<HTMLDivElement>
 
 function SearchedAccountsInput({}: SearchedAccountsInputProps) {
   const [keyword, setKeyword] = useState('')
@@ -59,7 +59,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
   }) => {
     //마우스 이벤트
     setOpen(false)
-    setKeyword('')
+
     append({
       id,
       name,
@@ -71,7 +71,6 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
   const appendWhenAccountExists = async () => {
     try {
       setOpen(false)
-      setKeyword('')
     } catch (error) {}
   }
 
@@ -96,7 +95,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
         office,
         metadata,
       })
-      setKeyword('')
+
       setOpen(false)
       if (results?.[selectedIndex]) console.log(results?.[selectedIndex])
     }

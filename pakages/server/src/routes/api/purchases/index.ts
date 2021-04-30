@@ -11,6 +11,28 @@ const purchasesRoute: FastifyPluginCallback = (fastify, apts, done) => {
   const purchaseRepo = getRepository(Purchase)
   const purchasePriceHistoryRepo = getRepository(PurchasePriceHistory)
 
+  fastify.get<{ Querystring: { keyword: string } }>(
+    '/search',
+    async (request, reply) => {
+      const search = request.query.keyword
+      const results = fastify.searchEngine
+        .searchPurchaseProduts(search)
+        .slice(0, 10)
+        .map((result) => ({
+          id: result.item.id,
+          name: result.item.name,
+          stock: result.item.stock,
+          unit_price: result.item.unit_price,
+          unit_price_discount: result.item.unit_price_discount,
+          price: result.item.price,
+          price_vat: result.item.price_vat,
+          total_price: result.item.total_price,
+          account: result.item.account,
+        }))
+      reply.send(results)
+    }
+  )
+
   fastify.get('/products', async (request, reply) => {
     const purchaseProducts = await purchaseProductRepo.find({
       relations: ['account'],
@@ -60,16 +82,16 @@ const purchasesRoute: FastifyPluginCallback = (fastify, apts, done) => {
 
   // Purchase
   fastify.post<{
-    Params: { accountid: number }
     Body: {
+      accountid: number
       name: string
       quantity: number
       include_vat: boolean
       unit_price: number
       purchase_price_discount: number
     }
-  }>('/:accountid/add/purchase', async (request, reply) => {
-    const accountId = request.params.accountid
+  }>('/add', async (request, reply) => {
+    const accountId = request.body.accountid
     const {
       name,
       quantity,

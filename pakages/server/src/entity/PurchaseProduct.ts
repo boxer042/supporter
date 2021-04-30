@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import purchasesRoute from '../routes/api/purchases'
 import { Account } from './Account'
 import { Purchase } from './Purchase'
 import { PurchasePriceHistory } from './PurchasePriceHistory'
