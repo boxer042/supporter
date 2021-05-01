@@ -95,7 +95,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
         office,
         metadata,
       })
-
+      setKeyword(name)
       setOpen(false)
       if (results?.[selectedIndex]) console.log(results?.[selectedIndex])
     }

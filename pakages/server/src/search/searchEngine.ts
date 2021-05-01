@@ -1,16 +1,16 @@
 import Fuse from 'fuse.js'
 import { getRepository } from 'typeorm'
 import { Account } from '../entity/Account'
-import { PurchaseProduct } from './../entity/PurchaseProduct'
+import { PurchaseGoods } from '../entity/PurchaseGoods'
 
 class SearchEngine {
   accountsFuse: Fuse<Account> | null
-  purchaseProductsFuse: Fuse<PurchaseProduct> | null
+  purchaseGoodsFuse: Fuse<PurchaseGoods> | null
 
   async account() {
     const repo = getRepository(Account)
     const accounts = await repo.find({
-      relations: ['metadata', 'handling_products'],
+      relations: ['metadata', 'handling_goods'],
     })
 
     this.accountsFuse = new Fuse(accounts, {
@@ -28,13 +28,13 @@ class SearchEngine {
     })
   }
 
-  async purchasesProducts() {
-    const repo = getRepository(PurchaseProduct)
-    const purchaseProducts = await repo.find({
+  async purchaseGoods() {
+    const repo = getRepository(PurchaseGoods)
+    const purchaseGoods = await repo.find({
       relations: ['account'],
     })
 
-    this.purchaseProductsFuse = new Fuse(purchaseProducts, {
+    this.purchaseGoodsFuse = new Fuse(purchaseGoods, {
       useExtendedSearch: true,
       includeScore: true,
       findAllMatches: true,
@@ -58,11 +58,11 @@ class SearchEngine {
     }
     return this.accountsFuse.search(keyword)
   }
-  searchPurchaseProduts(keyword: string) {
-    if (!this.purchaseProductsFuse) {
+  searchPurchaseGoods(keyword: string) {
+    if (!this.purchaseGoodsFuse) {
       throw new Error('Purchses Products is not initialized')
     }
-    return this.purchaseProductsFuse.search(keyword)
+    return this.purchaseGoodsFuse.search(keyword)
   }
 }
 

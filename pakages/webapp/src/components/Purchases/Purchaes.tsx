@@ -2,6 +2,7 @@ import React from 'react'
 import { useCurrentAccountsState } from '../../atoms/selectedAccountsState'
 import SearchedAccountsInput from '../Search/SearchedAccounts/SearchedAccountsInput'
 import PurchasesAdd from './PurchasesAdd'
+import PurchaesTest from './PurchasesTest'
 
 export type PurchaesProps = {}
 
@@ -12,6 +13,7 @@ function Purchaes({}: PurchaesProps) {
     <div>
       <h1>Purchaes</h1>
       <PurchasesAdd />
+      {/* <PurchaesTest /> */}
     </div>
   )
 }

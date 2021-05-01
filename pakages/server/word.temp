@@ -1,0 +1,14 @@
+
+Supply = 공급하는 (Supplies)
+Receive = 공급받는
+sale = 판매
+purchase = 구매
+period = 기간
+
+
+supplier = 공급처, 공급자
+
+supplied price = 제공되는 가격(공급처 실제 단가)
+supplied value = 공급가액
+supplied vat = 공급세액
+ 

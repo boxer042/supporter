@@ -19,7 +19,7 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
           fax: result.item.fax,
           phone: result.item.phone,
           metadata: result.item.metadata,
-          handling_products: result.item.handling_products,
+          handling_goods: result.item.handling_goods,
         }))
       reply.send(results)
     }
@@ -53,7 +53,7 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
     try {
       const accountsRepo = getRepository(Account)
       const account = await accountsRepo.findOne(accountId, {
-        relations: ['metadata', 'handling_products'],
+        relations: ['metadata', 'handling_goods'],
       })
       if (!account) {
         reply.status(500)
@@ -140,7 +140,7 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
       const accountsMetaRepo = getRepository(AccountMeta)
 
       const account = await accountsRepo.findOne(account_id, {
-        relations: ['metadata', 'handling_products'],
+        relations: ['metadata', 'handling_goods'],
       })
       if (!account) {
         reply.status(401)

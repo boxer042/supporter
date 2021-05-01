@@ -5,38 +5,38 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
-import { Account } from './Account'
-import { PurchaseProduct } from './PurchaseProduct'
 
-@Entity({ name: 'purchase_price_history' })
+import { PurchaseGoods } from './PurchaseGoods'
+
+@Entity()
 export class PurchasePriceHistory {
   @PrimaryGeneratedColumn()
   id: number
 
   @ManyToOne(
-    (type) => PurchaseProduct,
-    (purchaseProduct) => purchaseProduct.price_history,
+    (type) => PurchaseGoods,
+    (PurchaseGoods) => PurchaseGoods.price_history,
     {
       cascade: true,
     }
   )
-  name: PurchaseProduct
+  supplied_name: PurchaseGoods
 
   @CreateDateColumn()
   created_at: Date
 
   @Column()
-  unit_price: number
-
-  @Column({ default: 0 })
-  unit_price_discount: number
-
+  prev_supplied_value: number
   @Column()
-  price: number
-
+  prev_supplied_vat: number
   @Column()
-  price_vat: number
-
+  prev_supplied_price: number
   @Column()
-  total_price: number
+  prev_supplied_value_discount: number
+  @Column()
+  prev_purchase_value: number
+  @Column()
+  prev_purchase_vat: number
+  @Column()
+  prev_purchase_price: number
 }

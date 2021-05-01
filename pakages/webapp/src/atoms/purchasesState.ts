@@ -24,14 +24,14 @@ export const purchasesProductState = atom<PurchaseProduct>({
 
 export type PurchaseProduct = {
   accountId?: number
-  id: number
+  id?: number
   name: string
-  stock: number
-  unit_price: number
-  unit_price_discount: number
-  price: number
-  price_vat: number
-  total_price: number
+  stock?: number
+  unit_price?: number
+  unit_price_discount?: number
+  price?: number
+  price_vat?: number
+  total_price?: number
 }
 
 export function usePurchasesProductActions() {
@@ -41,7 +41,7 @@ export function usePurchasesProductActions() {
   const append = useCallback(
     (selected: PurchaseProduct) => {
       set((prev) => {
-        const exists = prev.id === selected.id
+        const exists = prev.name === selected.name
         return exists ? prev : selected
       })
     },

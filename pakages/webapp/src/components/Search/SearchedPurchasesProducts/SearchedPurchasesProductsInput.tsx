@@ -23,14 +23,14 @@ function SearchedPurchasesProductsInput({}: SearchedPurchasesProductsInputProps)
     total_price,
   }: {
     accountId?: number
-    id: number
+    id?: number
     name: string
-    stock: number
-    unit_price: number
-    unit_price_discount: number
-    price: number
-    price_vat: number
-    total_price: number
+    stock?: number
+    unit_price?: number
+    unit_price_discount?: number
+    price?: number
+    price_vat?: number
+    total_price?: number
   }) => {
     append({
       id,
@@ -42,6 +42,7 @@ function SearchedPurchasesProductsInput({}: SearchedPurchasesProductsInputProps)
       price_vat,
       total_price,
     })
+    setKeyword(name)
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +51,15 @@ function SearchedPurchasesProductsInput({}: SearchedPurchasesProductsInputProps)
 
   return (
     <div>
-      <Input value={keyword} onChange={onChange} />
+      <Input
+        value={keyword}
+        onChange={onChange}
+        onClick={() =>
+          onSelect({
+            name: keyword,
+          })
+        }
+      />
       {data?.map((result, i) => (
         <div key={i}>
           <div

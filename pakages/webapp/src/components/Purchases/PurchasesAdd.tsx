@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useCurrentAccountsState } from '../../atoms/selectedAccountsState'
+import { addPurchasesProducts } from '../../lib/api/purchases/addPurchasesProducts'
 import Input from '../Input/Input'
 import SearchedAccountsInput from '../Search/SearchedAccounts/SearchedAccountsInput'
 import SearchedPurchasesProductsInput from '../Search/SearchedPurchasesProducts/SearchedPurchasesProductsInput'
@@ -8,32 +9,28 @@ import { useCurrentPruchasesProductState } from './../../atoms/purchasesState'
 import useFormattedNumber from './../../hooks/useFormattedNumber'
 
 type PurchasesProductsInputsProps = {
-  stock?: string
-  unitPrice: string
-  unitPriceVat: string
-  unitPriceDiscount: string
-  priceDiscount?: string
-  price: string
-  priceVat: string
-  totalPrice: string
+  accountId?: number
+  name?: string
+  quantity: number
+  unitPrice: number
+  totalDiscount: number
 }
 export type PurchasesAddProps = {}
 
 function PurchasesAdd({}: PurchasesAddProps) {
   const currentPurchasesProduct = useCurrentPruchasesProductState()
+  const currentAccount = useCurrentAccountsState()
   const [value, onChangeNumber] = useFormattedNumber(0)
-  const [test, setTest] = useState()
-  const [test2, setTest2] = useState<any>()
   const [inputs, setInputs] = useState<PurchasesProductsInputsProps>({
-    stock: '',
-    unitPrice: '',
-    unitPriceVat: '',
-    unitPriceDiscount: '',
-    priceDiscount: '',
-    price: '',
-    priceVat: '',
-    totalPrice: '',
+    quantity: 0,
+    unitPrice: 0,
+    totalDiscount: 0,
   })
+
+  const { quantity, unitPrice, totalDiscount } = inputs
+
+  const price = quantity * unitPrice
+  const unitPriceDiscount = totalDiscount / quantity
 
   useEffect(() => {
     const getCurrentPurchasesProduct = async () => {
@@ -58,87 +55,80 @@ function PurchasesAdd({}: PurchasesAddProps) {
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value, name } = e.target
-      //   const number = parseInt(value.replace(/[^\d]+/g, ''), 10)
-      //   if (isNaN(number)) {
-      //     setInputs({ ...inputs, [name]: 0 })
-      //     return
-      //   }
-      console.log(name)
-      console.log(value)
+
+      if (isNaN(parseInt(value))) {
+        setInputs({
+          ...inputs,
+          [name]: 0,
+        })
+        return
+      }
+
+      // const number = parseInt(value.replace(/[^\d]+/g, ''), 10)
+      // if (isNaN(number)) {
+      //   setInputs({ ...inputs, [name]: '0' })
+      //   return
+      // }
       setInputs({
         ...inputs,
-        [name]: value,
+        // [name]: number.toLocaleString(),
+        [name]: parseInt(value),
       })
     },
     [inputs, setInputs]
   )
 
-  console.log('test : ' + test)
-  console.log('test2 : ' + test2)
+  const onClick = async () => {
+    const purchasesProducts = {
+      accountId: currentAccount.id,
+      name: currentPurchasesProduct.name,
+      quantity: quantity,
+      unit_price: unitPrice,
+      purchase_price_discount: totalDiscount,
+    }
+    // await addPurchasesProducts(purchasesProducts)
+    console.log(purchasesProducts)
+  } // 테스트 작성
+
+  console.log(currentAccount)
+  console.log(currentPurchasesProduct)
   return (
     <div css={block}>
       <div css={formBlock}>
         <div css={formItem}>
-          <div css={itemName}>거래처 선택</div>
+          <div css={itemName}>구매처</div>
           <SearchedAccountsInput css={itemInput} />
         </div>
-        <input
-          name="a"
-          value={test}
-          onChange={(e: any) => {
-            setTest(e.target.value)
-
-            setTest2(e.target.value * 0.1)
-          }}
-        />
-        <input name="b" value={test2} />
         <div css={formItem}>
-          <div css={itemName}>구매 상품</div>
+          <div css={itemName}>상품명</div>
           <SearchedPurchasesProductsInput />
         </div>
         <div css={formItem}>
           <div css={itemName}>구매 수량</div>
           <Input
             css={itemInput}
-            name="stock"
-            value={inputs.stock}
+            name="quantity"
+            value={quantity}
             onChange={onChange}
           />
         </div>
         <div css={formItem}>
-          <div css={itemName}>구매처 단가</div>
+          <div css={itemName}>단가</div>
           <Input
             css={itemInput}
             name="unitPrice"
-            value={inputs.unitPrice}
+            value={unitPrice}
             onChange={onChange}
           />
         </div>
         <div css={formItem}>
-          <div css={itemName}>구매처 단가 세액</div>
-          <Input
-            css={itemInput}
-            name="unitPriceVat"
-            value={parseInt(inputs.unitPrice) * 0.1}
-            onChange={onChange}
-          />
-        </div>
-        <div css={formItem}>
-          <div css={itemName}>개당 할인 </div>
+          <div css={itemName}>개당 할인</div>
           <Input
             css={itemInput}
             name="unitPriceDiscount"
-            value={inputs.unitPriceDiscount}
-            disabled
-          />
-        </div>
-        <div css={formItem}>
-          <div css={itemName}>토탈 할인 </div>
-          <Input
-            css={itemInput}
-            name="priceDiscount"
-            value={inputs.priceDiscount}
+            value={unitPriceDiscount || 0}
             onChange={onChange}
+            disabled
           />
         </div>
         <div css={formItem}>
@@ -146,29 +136,30 @@ function PurchasesAdd({}: PurchasesAddProps) {
           <Input
             css={itemInput}
             name="price"
-            value={inputs.price}
+            value={price}
+            onChange={onChange}
+            disabled
+          />
+        </div>
+        <div css={formItem}>
+          <div css={itemName}>총 할인</div>
+          <Input
+            css={itemInput}
+            name="totalDiscount"
+            value={totalDiscount}
             onChange={onChange}
           />
         </div>
         <div css={formItem}>
           <div css={itemName}>구매 가격 세액</div>
-          <Input
-            css={itemInput}
-            name="priceVat"
-            value={inputs.priceVat}
-            disabled
-          />
+          <Input css={itemInput} name="" disabled />
         </div>
         <div css={formItem}>
           <div css={itemName}>구매 총 가격</div>
-          <Input
-            css={itemInput}
-            name="totalPrice"
-            value={inputs.totalPrice}
-            disabled
-          />
+          <Input css={itemInput} name="" disabled />
         </div>
       </div>
+      <button onClick={onClick}>Add</button>
     </div>
   )
 }
@@ -182,3 +173,10 @@ const formItem = css`
 `
 const itemName = css``
 const itemInput = css``
+
+/**
+ * TODO
+ * 거래처 선택 후 거래처가 가지고 있는 취급상품 중에서만 검색되도록 구현
+ * 1. 리코일을 사용해서 필터링하는 방법
+ * 2. 서버단에서 퓨즈를 사용해서 서치하는 방법
+ */

@@ -6,9 +6,10 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
+
 import { Account } from './Account'
 
-@Entity({ name: 'accounts_metadata' })
+@Entity()
 export class AccountMeta {
   @PrimaryGeneratedColumn()
   id: number
