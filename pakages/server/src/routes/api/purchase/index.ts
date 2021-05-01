@@ -204,6 +204,8 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
         writePurchase.purchase_value !== purchaseGoods.purchase_value
       ) {
         reply.send({ 달라: '달라' })
+
+        // 첫 등록 상품은 가격 히스토리에 저장 시키지 않도록 한다.
         return
       }
 
