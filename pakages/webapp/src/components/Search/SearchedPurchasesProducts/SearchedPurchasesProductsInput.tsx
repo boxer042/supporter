@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import useSearchPurchasesProductsQuery from '../../../hooks/query/useSearchPurchasesProductsQuery'
+import { SearchPurchasesProductsResult } from '../../../lib/api/purchases/searchPurchasesProducts'
 import Input from '../../Input/Input'
 import { usePurchasesProductActions } from './../../../atoms/purchasesState'
 
@@ -14,35 +15,33 @@ function SearchedPurchasesProductsInput({}: SearchedPurchasesProductsInputProps)
 
   const onSelect = ({
     id,
-    name,
+    supplied_name,
+    include,
     stock,
-    unit_price,
-    unit_price_discount,
-    price,
-    price_vat,
-    total_price,
-  }: {
-    accountId?: number
-    id?: number
-    name: string
-    stock?: number
-    unit_price?: number
-    unit_price_discount?: number
-    price?: number
-    price_vat?: number
-    total_price?: number
-  }) => {
-    append({
-      id,
-      name,
-      stock,
-      unit_price,
-      unit_price_discount,
-      price,
-      price_vat,
-      total_price,
-    })
-    setKeyword(name)
+    supplied_value,
+    supplied_vat,
+    supplied_price,
+    supplied_value_discount,
+    purchase_value,
+    purchase_vat,
+    purchase_price,
+    account,
+  }: SearchPurchasesProductsResult) => {
+    // append({
+    //   id,
+    //   supplied_name,
+    //   include,
+    //   stock,
+    //   supplied_value,
+    //   supplied_vat,
+    //   supplied_price,
+    //   supplied_value_discount,
+    //   purchase_value,
+    //   purchase_vat,
+    //   purchase_price,
+    //   account,
+    // })
+    // setKeyword(supplied_name)
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +50,7 @@ function SearchedPurchasesProductsInput({}: SearchedPurchasesProductsInputProps)
 
   return (
     <div>
-      <Input
+      {/* <Input
         value={keyword}
         onChange={onChange}
         onClick={() =>
@@ -79,7 +78,7 @@ function SearchedPurchasesProductsInput({}: SearchedPurchasesProductsInputProps)
             {result.name}
           </div>
         </div>
-      ))}
+      ))} */}
     </div>
   )
 }

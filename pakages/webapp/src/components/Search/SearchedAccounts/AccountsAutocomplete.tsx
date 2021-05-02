@@ -1,7 +1,10 @@
 import { css } from '@emotion/react'
 import { useRef } from 'react'
 import useOnClickOutside from 'use-onclickoutside'
-import { SearchAccountsResult } from '../../../lib/api/accounts/searchAccounts'
+import {
+  SearchAccountsHandingGoodsResult,
+  SearchAccountsResult,
+} from '../../../lib/api/accounts/searchAccounts'
 import SerachedAccountsList from './SerachedAccountsList'
 
 export type AccountsAutocompleteProps = {
@@ -15,6 +18,7 @@ export type AccountsAutocompleteProps = {
     metadata?: {
       address?: string
     }
+    handlingGoods?: SearchAccountsHandingGoodsResult[]
   }) => void
   selectedIndex: number
 }
@@ -42,6 +46,7 @@ function AccountsAutocomplete({
             name={result.name}
             office={result.office}
             metadata={result.metadata}
+            handlingGoods={result.handling_goods}
             index={i}
             selected={i === selectedIndex}
             onSelect={onSelect}

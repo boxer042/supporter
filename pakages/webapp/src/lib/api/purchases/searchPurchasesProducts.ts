@@ -2,7 +2,7 @@ import client from '../client'
 
 export async function searchPurchasesProducts(keyword: string) {
   const response = await client.get<SearchPurchasesProductsResult[]>(
-    '/api/purchases/search',
+    '/api/purchase/search',
     {
       params: {
         keyword,
@@ -15,12 +15,23 @@ export async function searchPurchasesProducts(keyword: string) {
 
 export type SearchPurchasesProductsResult = {
   id: number
-  name: string
+  supplied_name: string
+  include: boolean
   stock: number
-  unit_price: number
-  unit_price_vat: number
-  unit_price_discount: number
-  price: number
-  price_vat: number
-  total_price: number
+  supplied_value: number
+  supplied_vat: number
+  supplied_price: number
+  supplied_value_discount: number
+  purchase_value: number
+  purchase_vat: number
+  purchase_price: number
+  account: {
+    id: number
+    thumbnail?: string
+    name: string
+    office: string
+    metadata?: {
+      address?: string
+    }
+  }
 }

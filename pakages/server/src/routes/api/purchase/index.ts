@@ -15,6 +15,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
     '/search',
     async (request, reply) => {
       const search = request.query.keyword
+
       const results = fastify.searchEngine
         .searchPurchaseGoods(search)
         .slice(0, 10)
@@ -147,13 +148,15 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
         suppliedPrice = suppliedValue * 1.1
       }
 
-      let suppliedValueDiscount: number
-      let totalSuppliedValueDiscount: number
+      let suppliedValueDiscount: number = 0
+      let totalSuppliedValueDiscount: number = 0
 
-      if (total_supplied_value_discount && !supplied_value_discount) {
+      if (total_supplied_value_discount > 0 && supplied_value_discount === 0) {
         suppliedValueDiscount = total_supplied_value_discount / quantity
+        totalSuppliedValueDiscount = total_supplied_value_discount
       } else {
         totalSuppliedValueDiscount = supplied_value_discount * quantity
+        suppliedValueDiscount = supplied_value_discount
       }
 
       const purchaseValue = suppliedValue - suppliedValueDiscount
@@ -164,21 +167,21 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
       const totalPurchaseVat = purchaseVat * quantity
       const totalPurchasePrice = purchasePrice * quantity
 
-      const testPurchase = {
-        include: false,
-        supplied_name: supplied_name,
-        quantity: quantity,
-        supplied_value: suppliedValue,
-        supplied_vat: suppliedVat,
-        supplied_price: suppliedPrice,
-        total_supplied_value_discount: totalSuppliedValueDiscount,
-        purchase_value: purchaseValue,
-        purchase_vat: purchaseVat,
-        purchase_price: purchasePrice,
-        total_purchase_value: totalPurchaseValue,
-        total_purchase_vat: totalPurchaseVat,
-        total_purchase_price: totalPurchasePrice,
-      }
+      // const testPurchase = {
+      //   include: false,
+      //   supplied_name: supplied_name,
+      //   quantity: quantity,
+      //   supplied_value: suppliedValue,
+      //   supplied_vat: suppliedVat,
+      //   supplied_price: suppliedPrice,
+      //   total_supplied_value_discount: totalSuppliedValueDiscount,
+      //   purchase_value: purchaseValue,
+      //   purchase_vat: purchaseVat,
+      //   purchase_price: purchasePrice,
+      //   total_purchase_value: totalPurchaseValue,
+      //   total_purchase_vat: totalPurchaseVat,
+      //   total_purchase_price: totalPurchasePrice,
+      // }
 
       const writePurchase = new Purchase()
       writePurchase.supplied_name = purchaseGoods
@@ -195,6 +198,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
       writePurchase.total_purchase_value = totalPurchaseValue
       writePurchase.total_purchase_vat = totalPurchaseVat
       writePurchase.total_purchase_price = totalPurchasePrice
+      purchaseGoods.stock = purchaseGoods.stock + quantity
 
       if (
         writePurchase.supplied_value !== purchaseGoods.supplied_value ||
@@ -203,48 +207,41 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
           purchaseGoods.supplied_value_discount ||
         writePurchase.purchase_value !== purchaseGoods.purchase_value
       ) {
-        reply.send({ 달라: '달라' })
-
         // 첫 등록 상품은 가격 히스토리에 저장 시키지 않도록 한다.
-        return
+
+        purchaseGoods.include = include
+        purchaseGoods.supplied_value = suppliedValue
+        purchaseGoods.supplied_vat = suppliedVat
+        purchaseGoods.supplied_price = suppliedPrice
+        purchaseGoods.supplied_value_discount = suppliedValueDiscount
+        purchaseGoods.purchase_value = purchaseValue
+        purchaseGoods.purchase_vat = purchaseVat
+        purchaseGoods.purchase_price = purchasePrice
+
+        if (
+          purchaseGoods.supplied_value &&
+          purchaseGoods.purchase_value &&
+          purchaseGoods.purchase_price !== 0
+        ) {
+          const addPurchasePriceHistory = new PurchasePriceHistory()
+          addPurchasePriceHistory.supplied_name = purchaseGoods
+          addPurchasePriceHistory.prev_include = include
+          addPurchasePriceHistory.prev_supplied_value = suppliedValue
+          addPurchasePriceHistory.prev_supplied_vat = suppliedVat
+          addPurchasePriceHistory.prev_supplied_price = suppliedPrice
+          addPurchasePriceHistory.prev_supplied_value_discount = suppliedValueDiscount
+          addPurchasePriceHistory.prev_purchase_value = purchaseValue
+          addPurchasePriceHistory.prev_purchase_vat = purchaseVat
+          addPurchasePriceHistory.prev_purchase_price = purchasePrice
+          await purchasePriceHistoryRepo.save(addPurchasePriceHistory)
+          console.log(addPurchasePriceHistory)
+        }
       }
 
-      purchaseGoods.stock = purchaseGoods.stock + quantity
-      purchaseGoods.include = include
-      purchaseGoods.supplied_value = suppliedValue
-      purchaseGoods.supplied_vat = suppliedVat
-      purchaseGoods.supplied_price = suppliedPrice
-      purchaseGoods.supplied_value_discount = suppliedValueDiscount
-      purchaseGoods.purchase_value = purchaseValue
-      purchaseGoods.purchase_vat = purchaseVat
-      purchaseGoods.purchase_price = purchasePrice
-      // if (
-      //   purchaseProduct.total_price !==
-      //   unit_price - purchase_price_discount / quantity
-      // ) {
-      //   if (purchaseProduct.unit_price && purchaseProduct.total_price !== 0) {
-      //     const addPurchasePriceHistory = new PurchasePriceHistory()
-      //     addPurchasePriceHistory.name = purchaseProduct
-      //     addPurchasePriceHistory.unit_price = purchaseProduct.unit_price
-      //     addPurchasePriceHistory.unit_price_discount =
-      //       purchaseProduct.unit_price_discount
-      //     addPurchasePriceHistory.price = purchaseProduct.price
-      //     addPurchasePriceHistory.price_vat = purchaseProduct.price_vat
-      //     addPurchasePriceHistory.total_price = purchaseProduct.total_price
-
-      //     await purchasePriceHistoryRepo.save(addPurchasePriceHistory)
-      //   }
-      //   purchaseProduct.unit_price = unit_price
-      //   purchaseProduct.unit_price_discount = purchase_price_discount / quantity
-      //   purchaseProduct.price = unit_price - purchase_price_discount / quantity
-      //   purchaseProduct.price_vat =
-      //     (unit_price - purchase_price_discount / quantity) * 0.1
-      //   purchaseProduct.total_price =
-      //     purchaseProduct.price + purchaseProduct.price_vat
-      // }
       await purchaseGoodsRepo.save(purchaseGoods)
       await purchaseRepo.save(writePurchase)
 
+      // Output
       reply.send(writePurchase)
     } catch (error) {
       console.log(error)

@@ -22,8 +22,11 @@ export class PurchasePriceHistory {
   )
   supplied_name: PurchaseGoods
 
+  @Column({ default: true })
+  prev_include: boolean
+
   @CreateDateColumn()
-  created_at: Date
+  change_price_at: Date
 
   @Column()
   prev_supplied_value: number

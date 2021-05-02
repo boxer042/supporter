@@ -1,11 +1,34 @@
 import { useCallback } from 'react'
 import {
   atom,
+  selector,
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
   useSetRecoilState,
 } from 'recoil'
+import { selectedAccountsState } from './selectedAccountsState'
+
+export const searchedPurchaseGoodsState = atom({
+  key: 'searchedPurchaseGoodsState',
+  default: '',
+})
+
+export const searchedHandlingGoodsState = selector({
+  key: 'searchedHandlingGoodsState',
+  get: ({ get }) => {
+    const list = get(selectedAccountsState)
+    const search = get(searchedPurchaseGoodsState)
+
+    if (search.length > 0) {
+      return list.handling_goods?.filter((item) =>
+        item.supplied_name.includes(search)
+      )
+    }
+
+    return null
+  },
+})
 
 export const purchasesProductState = atom<PurchaseProduct>({
   key: 'purchasesProductsState',
@@ -60,4 +83,12 @@ export function usePurchasesProductState() {
 
 export function useCurrentPruchasesProductState() {
   return useRecoilValue(purchasesProductState)
+}
+
+export function useSearchedPurchaseGoodsState() {
+  return useRecoilState(searchedPurchaseGoodsState)
+}
+
+export function useSearchedHandlingGoodsValue() {
+  return useRecoilValue(searchedHandlingGoodsState)
 }

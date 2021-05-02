@@ -8,6 +8,7 @@ import {
   useResetAccountsUnmountEffect,
   useSelectedAccountsActions,
 } from '../../../atoms/selectedAccountsState'
+import { SearchAccountsHandingGoodsResult } from '../../../lib/api/accounts/searchAccounts'
 
 export type SearchedAccountsInputProps = {} & React.HTMLAttributes<HTMLDivElement>
 
@@ -49,6 +50,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
     name,
     office,
     metadata,
+    handling_goods,
   }: {
     id: number
     name: string
@@ -56,6 +58,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
     metadata?: {
       address?: string
     }
+    handling_goods?: SearchAccountsHandingGoodsResult[]
   }) => {
     //마우스 이벤트
     setOpen(false)
@@ -65,10 +68,12 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
       name,
       office,
       metadata,
+      handling_goods,
     })
   }
 
   const appendWhenAccountExists = async () => {
+    // 그냥 엔터쳤을 때
     try {
       setOpen(false)
     } catch (error) {}
@@ -88,12 +93,13 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
         return
       }
       if (!selectedAccount) return
-      const { id, name, office, metadata } = selectedAccount
+      const { id, name, office, metadata, handling_goods } = selectedAccount
       append({
         id,
         name,
         office,
         metadata,
+        handling_goods,
       })
       setKeyword(name)
       setOpen(false)

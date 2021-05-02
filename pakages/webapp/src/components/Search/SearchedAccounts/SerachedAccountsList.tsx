@@ -3,6 +3,7 @@ import { css } from '@emotion/react'
 import palette from '../../../foundations/palette'
 import { formattedPhone } from './../../../lib/api/utils/formattedPhone'
 import { useAutocompleteIndex } from '../../../atoms/autocompleteIndex'
+import { SearchAccountsHandingGoodsResult } from '../../../lib/api/accounts/searchAccounts'
 
 export type SerachedAccountsListProps = {
   id: number
@@ -12,6 +13,7 @@ export type SerachedAccountsListProps = {
   metadata?: {
     address?: string
   }
+  handlingGoods?: SearchAccountsHandingGoodsResult[]
   index: number
   selected: boolean
   onSelect: (params: {
@@ -21,6 +23,7 @@ export type SerachedAccountsListProps = {
     metadata?: {
       address?: string
     }
+    handlingGoods?: SearchAccountsHandingGoodsResult[]
   }) => void
 }
 
@@ -29,6 +32,7 @@ function SerachedAccountsList({
   name,
   office,
   metadata,
+  handlingGoods,
   index,
   selected,
   onSelect,
@@ -45,6 +49,7 @@ function SerachedAccountsList({
       name,
       office,
       metadata,
+      handlingGoods,
     })
   }
 

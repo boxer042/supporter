@@ -5,7 +5,11 @@ import { addPurchasesProducts } from '../../lib/api/purchases/addPurchasesProduc
 import Input from '../Input/Input'
 import SearchedAccountsInput from '../Search/SearchedAccounts/SearchedAccountsInput'
 import SearchedPurchasesProductsInput from '../Search/SearchedPurchasesProducts/SearchedPurchasesProductsInput'
-import { useCurrentPruchasesProductState } from './../../atoms/purchasesState'
+import {
+  useCurrentPruchasesProductState,
+  useSearchedHandlingGoodsValue,
+  useSearchedPurchaseGoodsState,
+} from './../../atoms/purchasesState'
 import useFormattedNumber from './../../hooks/useFormattedNumber'
 
 type PurchasesProductsInputsProps = {
@@ -20,7 +24,9 @@ export type PurchasesAddProps = {}
 function PurchasesAdd({}: PurchasesAddProps) {
   const currentPurchasesProduct = useCurrentPruchasesProductState()
   const currentAccount = useCurrentAccountsState()
+  const [search, setSearch] = useSearchedPurchaseGoodsState()
   const [value, onChangeNumber] = useFormattedNumber(0)
+  const currentPurchaseGoods = useSearchedHandlingGoodsValue()
   const [inputs, setInputs] = useState<PurchasesProductsInputsProps>({
     quantity: 0,
     unitPrice: 0,
@@ -51,6 +57,13 @@ function PurchasesAdd({}: PurchasesAddProps) {
     }
     getCurrentPurchasesProduct()
   }, [currentPurchasesProduct, setInputs])
+
+  const searchedHandlingGoodsOnChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearch(e.target.value)
+    },
+    [setSearch]
+  )
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,8 +103,6 @@ function PurchasesAdd({}: PurchasesAddProps) {
     console.log(purchasesProducts)
   } // 테스트 작성
 
-  console.log(currentAccount)
-  console.log(currentPurchasesProduct)
   return (
     <div css={block}>
       <div css={formBlock}>
@@ -101,7 +112,12 @@ function PurchasesAdd({}: PurchasesAddProps) {
         </div>
         <div css={formItem}>
           <div css={itemName}>상품명</div>
-          <SearchedPurchasesProductsInput />
+          <Input
+            name="suppliedName"
+            value={search}
+            onChange={searchedHandlingGoodsOnChange}
+          />
+          {currentPurchaseGoods?.map((result) => result.supplied_name)}
         </div>
         <div css={formItem}>
           <div css={itemName}>구매 수량</div>

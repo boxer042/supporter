@@ -12,7 +12,6 @@ class SearchEngine {
     const accounts = await repo.find({
       relations: ['metadata', 'handling_goods'],
     })
-
     this.accountsFuse = new Fuse(accounts, {
       useExtendedSearch: true,
       includeScore: true,
@@ -22,7 +21,7 @@ class SearchEngine {
       keys: [
         {
           name: 'name',
-          weight: 2,
+          weight: 1,
         },
       ],
     })
@@ -42,7 +41,7 @@ class SearchEngine {
       threshold: 0.2,
       keys: [
         {
-          name: 'name',
+          name: 'supplied_name',
           weight: 2,
         },
       ],

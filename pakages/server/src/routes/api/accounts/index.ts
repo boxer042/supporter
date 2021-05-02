@@ -2,25 +2,54 @@ import { FastifyPluginCallback } from 'fastify'
 import { getRepository } from 'typeorm'
 import { Account } from './../../../entity/Account'
 import { AccountMeta } from './../../../entity/AccountMeta'
+import Fuse from 'fuse.js'
 
 const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
   fastify.get<{ Querystring: { keyword: string } }>(
     '/search',
-    (request, reply) => {
+    async (request, reply) => {
       const search = request.query.keyword
-      const results = fastify.searchEngine
-        .searchAccounts(search)
-        .slice(0, 10)
-        .map((result) => ({
-          id: result.item.id,
-          thumbnail: result.item.thumbnail,
-          name: result.item.name,
-          office: result.item.office,
-          fax: result.item.fax,
-          phone: result.item.phone,
-          metadata: result.item.metadata,
-          handling_goods: result.item.handling_goods,
-        }))
+      // const results = fastify.searchEngine
+      //   .searchAccounts(search)
+      //   .slice(0, 10)
+      //   .map((result) => ({
+      //     id: result.item.id,
+      //     thumbnail: result.item.thumbnail,
+      //     name: result.item.name,
+      //     office: result.item.office,
+      //     fax: result.item.fax,
+      //     phone: result.item.phone,
+      //     metadata: result.item.metadata,
+      //     handling_goods: result.item.handling_goods,
+      //   }))
+      const accountsRepo = getRepository(Account)
+      const accounts = await accountsRepo.find({
+        relations: ['metadata', 'handling_goods'],
+      })
+      const accountsFuse = new Fuse(accounts, {
+        useExtendedSearch: true,
+        includeScore: true,
+        findAllMatches: true,
+        distance: 4,
+        threshold: 0.2,
+        keys: [
+          {
+            name: 'name',
+            weight: 1,
+          },
+        ],
+      })
+      const results = accountsFuse.search(search).map((result) => ({
+        id: result.item.id,
+        thumbnail: result.item.thumbnail,
+        name: result.item.name,
+        office: result.item.office,
+        fax: result.item.fax,
+        phone: result.item.phone,
+        metadata: result.item.metadata,
+        handling_goods: result.item.handling_goods,
+      }))
+
       reply.send(results)
     }
   )
@@ -31,7 +60,9 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
   fastify.get('/', async (request, reply) => {
     const accountsRepo = getRepository(Account)
 
-    const accounts = await accountsRepo.find()
+    const accounts = await accountsRepo.find({
+      relations: ['metadata', 'handling_goods'],
+    })
     if (accounts.length === 0) {
       reply.send({
         code: 401,
