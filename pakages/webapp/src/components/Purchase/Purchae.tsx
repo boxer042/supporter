@@ -1,7 +1,7 @@
 import React from 'react'
 import { useCurrentAccountsState } from '../../atoms/selectedAccountsState'
 import SearchedAccountsInput from '../Search/SearchedAccounts/SearchedAccountsInput'
-import PurchasesAdd from './PurchasesAdd'
+import PurchasesAdd from './PurchaseAdd/PurchaseAdd'
 import PurchaesTest from './PurchasesTest'
 
 export type PurchaesProps = {}

@@ -1,12 +1,12 @@
 import React from 'react'
-import Purchaes from '../../components/Purchases/Purchaes'
+import Purchae from '../../components/Purchase/Purchae'
 
 export type PurchaseProps = {}
 
 function Purchase({}: PurchaseProps) {
   return (
     <div>
-      <Purchaes />
+      <Purchae />
     </div>
   )
 }

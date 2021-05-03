@@ -1,16 +1,17 @@
 import { css } from '@emotion/react'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useCurrentAccountsState } from '../../atoms/selectedAccountsState'
-import { addPurchasesProducts } from '../../lib/api/purchases/addPurchasesProducts'
-import Input from '../Input/Input'
-import SearchedAccountsInput from '../Search/SearchedAccounts/SearchedAccountsInput'
-import SearchedPurchasesProductsInput from '../Search/SearchedPurchasesProducts/SearchedPurchasesProductsInput'
+import { useCurrentAccountsState } from '../../../atoms/selectedAccountsState'
+import { addPurchasesProducts } from '../../../lib/api/purchases/addPurchasesProducts'
+import Input from '../../Input/Input'
+import SearchedAccountsInput from '../../Search/SearchedAccounts/SearchedAccountsInput'
+import SearchedPurchasesProductsInput from '../../Search/SearchedPurchasesProducts/SearchedPurchasesProductsInput'
 import {
   useCurrentPruchasesProductState,
   useSearchedHandlingGoodsValue,
   useSearchedPurchaseGoodsState,
-} from './../../atoms/purchasesState'
-import useFormattedNumber from './../../hooks/useFormattedNumber'
+} from '../../../atoms/purchasesState'
+import useFormattedNumber from '../../../hooks/useFormattedNumber'
+import PurchaseSuppliedNameAutocomplete from './PurchaseSuppliedNameAutocomplete'
 
 type PurchasesProductsInputsProps = {
   accountId?: number
@@ -25,8 +26,10 @@ function PurchasesAdd({}: PurchasesAddProps) {
   const currentPurchasesProduct = useCurrentPruchasesProductState()
   const currentAccount = useCurrentAccountsState()
   const [search, setSearch] = useSearchedPurchaseGoodsState()
-  const [value, onChangeNumber] = useFormattedNumber(0)
+  const [searchOpen, setSearchOpen] = useState(false)
   const currentPurchaseGoods = useSearchedHandlingGoodsValue()
+  const [value, onChangeNumber] = useFormattedNumber(0)
+
   const [inputs, setInputs] = useState<PurchasesProductsInputsProps>({
     quantity: 0,
     unitPrice: 0,
@@ -58,7 +61,7 @@ function PurchasesAdd({}: PurchasesAddProps) {
     getCurrentPurchasesProduct()
   }, [currentPurchasesProduct, setInputs])
 
-  const searchedHandlingGoodsOnChange = useCallback(
+  const onSearchedSuppliedNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearch(e.target.value)
     },
@@ -115,9 +118,14 @@ function PurchasesAdd({}: PurchasesAddProps) {
           <Input
             name="suppliedName"
             value={search}
-            onChange={searchedHandlingGoodsOnChange}
+            onChange={onSearchedSuppliedNameChange}
+            onFocus={() => setSearchOpen(true)}
+            onBlur={() => setSearchOpen(false)}
+            autoComplete="off"
           />
-          {currentPurchaseGoods?.map((result) => result.supplied_name)}
+          {searchOpen && (
+            <PurchaseSuppliedNameAutocomplete results={currentPurchaseGoods} />
+          )}
         </div>
         <div css={formItem}>
           <div css={itemName}>구매 수량</div>

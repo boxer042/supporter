@@ -26,7 +26,7 @@ export const searchedHandlingGoodsState = selector({
       )
     }
 
-    return null
+    return list.handling_goods
   },
 })
 

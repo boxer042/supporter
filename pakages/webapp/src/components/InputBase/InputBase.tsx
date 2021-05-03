@@ -30,7 +30,9 @@ const block = (disabled: boolean = false) => css`
   color: ${palette.blueGrey[700]};
   font-size: 1rem;
   display: flex;
-
+  &:focus-within {
+    border: #ff8bb8 1px solid;
+  }
   ${disabled &&
   css`
     background: ${palette.blueGrey[50]};
