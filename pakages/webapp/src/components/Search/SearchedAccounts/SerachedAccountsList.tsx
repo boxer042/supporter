@@ -13,7 +13,7 @@ export type SerachedAccountsListProps = {
   metadata?: {
     address?: string
   }
-  handlingGoods?: SearchAccountsHandingGoodsResult[]
+  handlingGoods: SearchAccountsHandingGoodsResult[] | null
   index: number
   selected: boolean
   onSelect: (params: {
@@ -23,7 +23,7 @@ export type SerachedAccountsListProps = {
     metadata?: {
       address?: string
     }
-    handlingGoods?: SearchAccountsHandingGoodsResult[]
+    handlingGoods: SearchAccountsHandingGoodsResult[] | null
   }) => void
 }
 

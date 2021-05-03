@@ -1,10 +1,10 @@
 import { css } from '@emotion/react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useCurrentAccountsState } from '../../../atoms/selectedAccountsState'
 import { addPurchasesProducts } from '../../../lib/api/purchases/addPurchasesProducts'
 import Input from '../../Input/Input'
 import SearchedAccountsInput from '../../Search/SearchedAccounts/SearchedAccountsInput'
-import SearchedPurchasesProductsInput from '../../Search/SearchedPurchasesProducts/SearchedPurchasesProductsInput'
+
 import {
   useCurrentPruchasesProductState,
   useSearchedHandlingGoodsValue,
@@ -12,6 +12,7 @@ import {
 } from '../../../atoms/purchasesState'
 import useFormattedNumber from '../../../hooks/useFormattedNumber'
 import PurchaseSuppliedNameAutocomplete from './PurchaseSuppliedNameAutocomplete'
+import PurchaseSuppliedNameInput from './PurchaseSuppliedNameInput'
 
 type PurchasesProductsInputsProps = {
   accountId?: number
@@ -25,8 +26,6 @@ export type PurchasesAddProps = {}
 function PurchasesAdd({}: PurchasesAddProps) {
   const currentPurchasesProduct = useCurrentPruchasesProductState()
   const currentAccount = useCurrentAccountsState()
-  const [search, setSearch] = useSearchedPurchaseGoodsState()
-  const [searchOpen, setSearchOpen] = useState(false)
   const currentPurchaseGoods = useSearchedHandlingGoodsValue()
   const [value, onChangeNumber] = useFormattedNumber(0)
 
@@ -61,13 +60,6 @@ function PurchasesAdd({}: PurchasesAddProps) {
     getCurrentPurchasesProduct()
   }, [currentPurchasesProduct, setInputs])
 
-  const onSearchedSuppliedNameChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearch(e.target.value)
-    },
-    [setSearch]
-  )
-
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value, name } = e.target
@@ -96,7 +88,7 @@ function PurchasesAdd({}: PurchasesAddProps) {
 
   const onClick = async () => {
     const purchasesProducts = {
-      accountId: currentAccount.id,
+      accountId: currentAccount?.id,
       name: currentPurchasesProduct.name,
       quantity: quantity,
       unit_price: unitPrice,
@@ -114,18 +106,10 @@ function PurchasesAdd({}: PurchasesAddProps) {
           <SearchedAccountsInput css={itemInput} />
         </div>
         <div css={formItem}>
-          <div css={itemName}>상품명</div>
-          <Input
-            name="suppliedName"
-            value={search}
-            onChange={onSearchedSuppliedNameChange}
-            onFocus={() => setSearchOpen(true)}
-            onBlur={() => setSearchOpen(false)}
-            autoComplete="off"
-          />
-          {searchOpen && (
-            <PurchaseSuppliedNameAutocomplete results={currentPurchaseGoods} />
-          )}
+          <div css={itemName}>
+            상품명 - {currentAccount?.handling_goods?.length}개
+          </div>
+          <PurchaseSuppliedNameInput />
         </div>
         <div css={formItem}>
           <div css={itemName}>구매 수량</div>

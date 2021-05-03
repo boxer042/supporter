@@ -19,7 +19,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { append } = useSelectedAccountsActions()
+  const { append, reseted } = useSelectedAccountsActions()
   const {
     results,
     goUp,
@@ -29,9 +29,16 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
   } = useAccountsAutocomplete(debouncedKeyword)
 
   useResetAccountsUnmountEffect()
+
   useEffect(() => {
     if (!open) reset()
   }, [open, reset])
+
+  useEffect(() => {
+    if (keyword === '' || keyword.length === 0) {
+      reseted()
+    }
+  }, [keyword, reseted])
 
   const onFocus = () => setOpen(true)
   const onBlur = () => {
@@ -50,7 +57,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
     name,
     office,
     metadata,
-    handling_goods,
+    handlingGoods,
   }: {
     id: number
     name: string
@@ -58,7 +65,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
     metadata?: {
       address?: string
     }
-    handling_goods?: SearchAccountsHandingGoodsResult[]
+    handlingGoods: SearchAccountsHandingGoodsResult[] | null
   }) => {
     //마우스 이벤트
     setOpen(false)
@@ -68,7 +75,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
       name,
       office,
       metadata,
-      handling_goods,
+      handling_goods: handlingGoods,
     })
   }
 

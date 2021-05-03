@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import {
   atom,
-  selector,
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
@@ -9,42 +8,19 @@ import {
 } from 'recoil'
 import { SearchAccountsResult } from '../lib/api/accounts/searchAccounts'
 
-export const selectedAccountsState = atom<SearchAccountsResult>({
+export const selectedAccountsState = atom<SearchAccountsResult | null>({
   key: 'selectedAccountsState',
-  default: {
-    id: 0,
-    thumbnail: '',
-    name: '',
-    office: '',
-    metadata: {
-      address: '',
-    },
-    handling_goods: [
-      {
-        id: 0,
-        supplied_name: '',
-        include: true,
-        stock: 0,
-        supplied_value: 0,
-        supplied_vat: 0,
-        supplied_price: 0,
-        supplied_value_discount: 0,
-        purchase_value: 0,
-        purchase_vat: 0,
-        purchase_price: 0,
-      },
-    ],
-  },
+  default: null,
 })
 
 export function useSelectedAccountsActions() {
   const set = useSetRecoilState(selectedAccountsState)
-  const reset = useResetRecoilState(selectedAccountsState)
+  const reseted = useResetRecoilState(selectedAccountsState)
 
   const append = useCallback(
     (selected: SearchAccountsResult) => {
       set((prev) => {
-        const exist = prev.id === selected.id
+        const exist = prev?.id === selected.id
         // return exist ? prev : prev.concat(selected)
         return exist ? prev : selected
       })
@@ -53,7 +29,7 @@ export function useSelectedAccountsActions() {
   )
   return {
     set,
-    reset,
+    reseted,
     append,
   }
 }
@@ -134,3 +110,20 @@ export function useResetAccountsUnmountEffect() {
 //     }
 //   }, [reset])
 // }
+
+// data set/
+// [
+//   {
+//     id: null,
+//     supplied_name: '',
+//     include: true,
+//     stock: 0,
+//     supplied_value: 0,
+//     supplied_vat: 0,
+//     supplied_price: 0,
+//     supplied_value_discount: 0,
+//     purchase_value: 0,
+//     purchase_vat: 0,
+//     purchase_price: 0,
+//   },
+// ]

@@ -1,20 +1,51 @@
-import * as React from 'react'
+import React, { useRef } from 'react'
+import useOnClickOutside from 'use-onclickoutside'
 import { SearchAccountsHandingGoodsResult } from '../../../lib/api/accounts/searchAccounts'
 import { css } from '@emotion/react'
 import PuchaseSuppliedNameList from './PurchaseSuppliedNameList'
 
 type PurchaseSuppliedNameAutocompleteProps = {
-  results?: SearchAccountsHandingGoodsResult[]
+  keyword: string
+  results?: SearchAccountsHandingGoodsResult[] | null
+  visible: boolean
+  onClose: Parameters<typeof useOnClickOutside>[1]
 }
 
 export default function PurchaseSuppliedNameAutocomplete({
+  keyword,
   results,
+  visible,
+  onClose,
 }: PurchaseSuppliedNameAutocompleteProps) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useOnClickOutside(ref, onClose)
+
+  if (!visible || !results || results.length === 0)
+    return (
+      <div css={itemBlock}>{keyword.length > 0 && `+ ${keyword} 추가하기`}</div>
+    )
+
   return (
     <div css={block}>
       <div css={itemBlock}>
-        {results?.map((result) => result.supplied_name)}
-        <PuchaseSuppliedNameList />
+        {keyword && <div> + {keyword} 추가하기</div>}
+        {results.map((result, i) => (
+          <PuchaseSuppliedNameList
+            index={i}
+            goodsId={result.id}
+            include={result.include}
+            stock={result.stock}
+            suppliedName={result.supplied_name}
+            suppliedValue={result.supplied_value}
+            suppliedVat={result.supplied_vat}
+            suppliedPrice={result.supplied_price}
+            suppliedVauleDiscount={result.supplied_value_discount}
+            purchaseValue={result.purchase_price}
+            purchaseVat={result.purchase_vat}
+            purchasePrice={result.purchase_price}
+          />
+        ))}
       </div>
     </div>
   )

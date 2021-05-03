@@ -18,7 +18,7 @@ export type AccountsAutocompleteProps = {
     metadata?: {
       address?: string
     }
-    handlingGoods?: SearchAccountsHandingGoodsResult[]
+    handlingGoods: SearchAccountsHandingGoodsResult[] | null
   }) => void
   selectedIndex: number
 }

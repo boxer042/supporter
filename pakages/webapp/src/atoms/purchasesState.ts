@@ -14,22 +14,28 @@ export const searchedPurchaseGoodsState = atom({
   default: '',
 })
 
+export const suppliedNameAutocompleteIndex = atom<number>({
+  key: 'suppliedNameAutocompleteIndex',
+  default: -1,
+})
+
 export const searchedHandlingGoodsState = selector({
   key: 'searchedHandlingGoodsState',
   get: ({ get }) => {
     const list = get(selectedAccountsState)
     const search = get(searchedPurchaseGoodsState)
-
+    const results = list?.handling_goods
     if (search.length > 0) {
-      return list.handling_goods?.filter((item) =>
-        item.supplied_name.includes(search)
+      return (
+        results?.filter((item) => item.supplied_name.includes(search)) || null
       )
     }
 
-    return list.handling_goods
+    return results || null
   },
 })
 
+// 위에 새로운
 export const purchasesProductState = atom<PurchaseProduct>({
   key: 'purchasesProductsState',
   default: {
@@ -91,4 +97,12 @@ export function useSearchedPurchaseGoodsState() {
 
 export function useSearchedHandlingGoodsValue() {
   return useRecoilValue(searchedHandlingGoodsState)
+}
+
+export function useSuppliedNameAutocompleteIndex() {
+  return useRecoilState(suppliedNameAutocompleteIndex)
+}
+
+export function useResetSuppliedNameAutocompleteIndex() {
+  return useResetRecoilState(suppliedNameAutocompleteIndex)
 }

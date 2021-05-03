@@ -11,7 +11,7 @@ export type useAccountsAutocompleteProps = {}
 export default function useAccountsAutocomplete(keyword: string) {
   const [prevData, setPrevData] = useState<SearchAccountsResult[] | null>(null)
   const { data } = useSearchAccountsQuery(keyword, {
-    enabled: keyword !== '',
+    enabled: keyword !== "'",
   })
   const [selectedIndex, setSelectedIndex] = useAutocompleteIndex()
   const reset = useResetAutocompleteIndex()
@@ -27,7 +27,7 @@ export default function useAccountsAutocomplete(keyword: string) {
   }, [data])
 
   useEffect(() => {
-    if (keyword === '') {
+    if (keyword === "'") {
       setPrevData(null)
     }
     setSelectedIndex(-1)

@@ -20,7 +20,7 @@ export type SearchAccountsResult = {
   metadata?: {
     address?: string
   }
-  handling_goods?: SearchAccountsHandingGoodsResult[]
+  handling_goods: SearchAccountsHandingGoodsResult[] | null
 }
 
 export type SearchAccountsHandingGoodsResult = {
