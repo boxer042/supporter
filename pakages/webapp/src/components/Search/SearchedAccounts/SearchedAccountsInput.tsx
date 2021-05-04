@@ -129,7 +129,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
         onBlur={(e) => {
           e.persist()
           const relatedTarget = e.relatedTarget as HTMLElement | null
-          if (relatedTarget && relatedTarget.dataset.type === 'account-itme') {
+          if (relatedTarget && relatedTarget.dataset.type === 'account-item') {
             return
           }
           onBlur()

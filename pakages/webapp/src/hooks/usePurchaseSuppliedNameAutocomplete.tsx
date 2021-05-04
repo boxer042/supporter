@@ -38,9 +38,30 @@ export default function usePurchaseSuppliedNameAutocomplete(keyword: string) {
     setSelectedIndex(-1)
   }, [keyword, setSelectedIndex])
 
+  const goUp = () => {
+    if (!data || data.length === 0) return
+    if (selectedIndex === -1) {
+      setSelectedIndex(data.length - 1)
+      return
+    }
+    setSelectedIndex(selectedIndex - 1)
+  }
+
+  const goDown = () => {
+    if (!data || data.length === 0) return
+    if (selectedIndex === data.length - 1) {
+      // unselect
+      setSelectedIndex(-1)
+      return
+    }
+    setSelectedIndex(selectedIndex + 1)
+  }
+
   return {
     results: data || prevData,
     selectedIndex,
+    goUp,
+    goDown,
     reset,
   }
 }

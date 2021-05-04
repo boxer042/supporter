@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import React from 'react'
 import { useCurrentAccountsState } from '../../atoms/selectedAccountsState'
 import SearchedAccountsInput from '../Search/SearchedAccounts/SearchedAccountsInput'
@@ -10,7 +11,7 @@ function Purchaes({}: PurchaesProps) {
   const currentAccounts = useCurrentAccountsState()
   console.log(currentAccounts)
   return (
-    <div>
+    <div css={block}>
       <h1>Purchaes</h1>
       <PurchasesAdd />
       {/* <PurchaesTest /> */}
@@ -19,3 +20,7 @@ function Purchaes({}: PurchaesProps) {
 }
 
 export default Purchaes
+
+const block = css`
+  padding-bottom: 6rem;
+`

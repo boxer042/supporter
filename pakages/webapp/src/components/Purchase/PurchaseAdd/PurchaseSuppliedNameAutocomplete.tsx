@@ -5,34 +5,30 @@ import { css } from '@emotion/react'
 import PuchaseSuppliedNameList from './PurchaseSuppliedNameList'
 
 type PurchaseSuppliedNameAutocompleteProps = {
-  keyword: string
   results?: SearchAccountsHandingGoodsResult[] | null
   visible: boolean
   onClose: Parameters<typeof useOnClickOutside>[1]
+  selectedIndex: number
 }
 
 export default function PurchaseSuppliedNameAutocomplete({
-  keyword,
   results,
   visible,
   onClose,
+  selectedIndex,
 }: PurchaseSuppliedNameAutocompleteProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useOnClickOutside(ref, onClose)
 
-  if (!visible || !results || results.length === 0)
-    return (
-      <div css={itemBlock}>{keyword.length > 0 && `+ ${keyword} 추가하기`}</div>
-    )
+  if (!visible || !results || results.length === 0) return null
 
   return (
-    <div css={block}>
+    <div css={block} ref={ref}>
       <div css={itemBlock}>
-        {keyword && <div> + {keyword} 추가하기</div>}
+        {/* {keyword && <div> + {keyword} 추가하기</div>} */}
         {results.map((result, i) => (
           <PuchaseSuppliedNameList
-            index={i}
             goodsId={result.id}
             include={result.include}
             stock={result.stock}
@@ -44,6 +40,9 @@ export default function PurchaseSuppliedNameAutocomplete({
             purchaseValue={result.purchase_price}
             purchaseVat={result.purchase_vat}
             purchasePrice={result.purchase_price}
+            key={result.id}
+            index={i}
+            selected={i === selectedIndex}
           />
         ))}
       </div>

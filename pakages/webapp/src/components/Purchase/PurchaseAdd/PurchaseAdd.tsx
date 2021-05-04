@@ -6,59 +6,81 @@ import Input from '../../Input/Input'
 import SearchedAccountsInput from '../../Search/SearchedAccounts/SearchedAccountsInput'
 
 import {
-  useCurrentPruchasesProductState,
   useSearchedHandlingGoodsValue,
-  useSearchedPurchaseGoodsState,
+  useSelectedSuppliedNameStateValue,
 } from '../../../atoms/purchasesState'
 import useFormattedNumber from '../../../hooks/useFormattedNumber'
-import PurchaseSuppliedNameAutocomplete from './PurchaseSuppliedNameAutocomplete'
 import PurchaseSuppliedNameInput from './PurchaseSuppliedNameInput'
+import moment from 'moment'
 
-type PurchasesProductsInputsProps = {
-  accountId?: number
-  name?: string
+type PurchaseGoodsInputProps = {
+  purchasedAt: string
   quantity: number
-  unitPrice: number
-  totalDiscount: number
+  include: string
+  suppliedValue: number
+  suppliedVat: number
+  suppliedPrice: number
+  suppliedValueDiscount: number
+  purchaseValue: number
+  purchaseVat: number
+  purchasePrice: number
+  totalPurchaseVat: number
+  totalPurchasePrice: number
+  totalSuppliedValueDiscount: number
 }
 export type PurchasesAddProps = {}
 
 function PurchasesAdd({}: PurchasesAddProps) {
-  const currentPurchasesProduct = useCurrentPruchasesProductState()
   const currentAccount = useCurrentAccountsState()
+  const selectedSuppliedName = useSelectedSuppliedNameStateValue()
   const currentPurchaseGoods = useSearchedHandlingGoodsValue()
   const [value, onChangeNumber] = useFormattedNumber(0)
 
-  const [inputs, setInputs] = useState<PurchasesProductsInputsProps>({
-    quantity: 0,
-    unitPrice: 0,
-    totalDiscount: 0,
+  const [inputs, setInputs] = useState<PurchaseGoodsInputProps>({
+    purchasedAt: moment().format('YYYY-MM-DD'),
+    quantity: 1,
+    include: '',
+    suppliedValue: 0,
+    suppliedVat: 0,
+    suppliedPrice: 0,
+    suppliedValueDiscount: 0,
+    purchaseValue: 0,
+    purchaseVat: 0,
+    purchasePrice: 0,
+    totalPurchaseVat: 0,
+    totalPurchasePrice: 0,
+    totalSuppliedValueDiscount: 0,
   })
 
-  const { quantity, unitPrice, totalDiscount } = inputs
-
-  const price = quantity * unitPrice
-  const unitPriceDiscount = totalDiscount / quantity
+  const {
+    purchasedAt,
+    quantity,
+    include,
+    suppliedValue,
+    suppliedValueDiscount,
+    totalSuppliedValueDiscount,
+  } = inputs
 
   useEffect(() => {
-    const getCurrentPurchasesProduct = async () => {
-      const data = currentPurchasesProduct
-      if (data.name === '' || data.name.length === 0) {
-        return
-      }
-      //   setInputs({
-      //     stock: '0',
-      //     unitPrice: data.unit_price.toLocaleString(),
-      //     unitPriceVat: (data.unit_price * 0.1).toLocaleString(),
-      //     unitPriceDiscount: data.unit_price_discount.toLocaleString(),
-      //     priceDiscount: '0',
-      //     price: data.price.toLocaleString(),
-      //     priceVat: data.price_vat.toLocaleString(),
-      //     totalPrice: data.total_price.toLocaleString(),
-      //   })
+    if (!selectedSuppliedName) {
+      return
     }
-    getCurrentPurchasesProduct()
-  }, [currentPurchasesProduct, setInputs])
+    setInputs({
+      ...inputs,
+      quantity: 1,
+      include: selectedSuppliedName.include.toString(),
+      suppliedValue: selectedSuppliedName.supplied_value,
+      suppliedValueDiscount: selectedSuppliedName.supplied_value_discount,
+      totalSuppliedValueDiscount: selectedSuppliedName.supplied_value_discount,
+    })
+  }, [selectedSuppliedName])
+
+  useEffect(() => {
+    setInputs({
+      ...inputs,
+      totalSuppliedValueDiscount: suppliedValueDiscount * quantity,
+    })
+  }, [suppliedValueDiscount, quantity])
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,17 +108,22 @@ function PurchasesAdd({}: PurchasesAddProps) {
     [inputs, setInputs]
   )
 
-  const onClick = async () => {
-    const purchasesProducts = {
-      accountId: currentAccount?.id,
-      name: currentPurchasesProduct.name,
-      quantity: quantity,
-      unit_price: unitPrice,
-      purchase_price_discount: totalDiscount,
-    }
-    // await addPurchasesProducts(purchasesProducts)
-    console.log(purchasesProducts)
-  } // 테스트 작성
+  const onSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value, name } = e.target
+    setInputs({
+      ...inputs,
+      [name]: value,
+    })
+  }
+
+  const onClick = async () => {} // 테스트 작성
+
+  const purchaseValue = suppliedValue - suppliedValueDiscount
+  const purchaseVat = purchaseValue * 0.1
+  const purchasePrice = purchaseValue + purchaseVat
+  const totalPurchaseValue = purchaseValue * quantity
+  const totalPurchaseVat = purchaseVat * quantity
+  const totalPurchasePrice = purchaseValue * 1.1 * quantity
 
   return (
     <div css={block}>
@@ -112,6 +139,18 @@ function PurchasesAdd({}: PurchasesAddProps) {
           <PurchaseSuppliedNameInput />
         </div>
         <div css={formItem}>
+          <div css={itemName}>구매 날짜</div>
+          <Input
+            type="date"
+            css={itemInput}
+            name="purchasedAt"
+            value={purchasedAt}
+            onChange={(e) =>
+              setInputs({ ...inputs, purchasedAt: e.target.value })
+            }
+          />
+        </div>
+        <div css={formItem}>
           <div css={itemName}>구매 수량</div>
           <Input
             css={itemInput}
@@ -121,50 +160,107 @@ function PurchasesAdd({}: PurchasesAddProps) {
           />
         </div>
         <div css={formItem}>
+          <div css={itemName}>Include</div>
+          <select name="include" onChange={onSelected} defaultValue={include}>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
+        <div css={formItem}>
           <div css={itemName}>단가</div>
           <Input
             css={itemInput}
-            name="unitPrice"
-            value={unitPrice}
+            name="suppliedValue"
+            value={suppliedValue}
+            onChange={onChange}
+          />
+          {suppliedValue}
+        </div>
+
+        <div css={formItem}>
+          <div css={itemName}>단가 할인</div>
+          <Input
+            css={itemInput}
+            name="suppliedValueDiscount"
+            value={suppliedValueDiscount}
             onChange={onChange}
           />
         </div>
         <div css={formItem}>
-          <div css={itemName}>개당 할인</div>
+          <div css={itemName}>구매 단가</div>
           <Input
             css={itemInput}
-            name="unitPriceDiscount"
-            value={unitPriceDiscount || 0}
-            onChange={onChange}
-            disabled
+            name="purchaseValue"
+            value={purchaseValue}
+            onChange={() => {}}
           />
         </div>
         <div css={formItem}>
-          <div css={itemName}>구매 가격</div>
+          <div css={itemName}>구매 단가 부가세</div>
           <Input
             css={itemInput}
-            name="price"
-            value={price}
+            name="purchaseVat"
+            value={purchaseVat}
+            onChange={() => {}}
+          />
+        </div>
+        <div css={formItem}>
+          <div css={itemName}>구매 단가 가격</div>
+          <Input
+            css={itemInput}
+            name="purchasePrice"
+            value={purchasePrice}
             onChange={onChange}
-            disabled
           />
         </div>
         <div css={formItem}>
           <div css={itemName}>총 할인</div>
           <Input
             css={itemInput}
-            name="totalDiscount"
-            value={totalDiscount}
-            onChange={onChange}
+            name="totalSuppliedValueDiscount"
+            value={totalSuppliedValueDiscount}
+            onChange={(e) => {
+              if (isNaN(parseInt(e.target.value))) {
+                setInputs({
+                  ...inputs,
+                  totalSuppliedValueDiscount: 0,
+                  suppliedValueDiscount: 0,
+                })
+                return
+              }
+              setInputs({
+                ...inputs,
+                suppliedValueDiscount: parseInt(e.target.value) / quantity,
+              })
+            }}
           />
         </div>
         <div css={formItem}>
-          <div css={itemName}>구매 가격 세액</div>
-          <Input css={itemInput} name="" disabled />
+          <div css={itemName}>구매 단가 합</div>
+          <Input
+            css={itemInput}
+            name="totalPurchaseValue"
+            value={totalPurchaseValue}
+            onChange={() => {}}
+          />
+        </div>
+        <div css={formItem}>
+          <div css={itemName}>구매 단가 부가세 합</div>
+          <Input
+            css={itemInput}
+            name="totalPurchaseVat"
+            value={totalPurchaseVat}
+            onChange={() => {}}
+          />
         </div>
         <div css={formItem}>
           <div css={itemName}>구매 총 가격</div>
-          <Input css={itemInput} name="" disabled />
+          <Input
+            css={itemInput}
+            name="totalPurchasePrice"
+            value={totalPurchasePrice}
+            onChange={() => {}}
+          />
         </div>
       </div>
       <button onClick={onClick}>Add</button>

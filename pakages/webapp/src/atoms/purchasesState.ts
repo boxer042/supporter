@@ -7,7 +7,15 @@ import {
   useResetRecoilState,
   useSetRecoilState,
 } from 'recoil'
+import { SearchAccountsHandingGoodsResult } from '../lib/api/accounts/searchAccounts'
 import { selectedAccountsState } from './selectedAccountsState'
+
+export const selectedSuppliedNameState = atom<SearchAccountsHandingGoodsResult | null>(
+  {
+    key: 'selectedSuppliedNameState',
+    default: null,
+  }
+)
 
 export const searchedPurchaseGoodsState = atom({
   key: 'searchedPurchaseGoodsState',
@@ -34,6 +42,30 @@ export const searchedHandlingGoodsState = selector({
     return results || null
   },
 })
+
+export function usePurchaseGoodsActions() {
+  const set = useSetRecoilState(selectedSuppliedNameState)
+  const reseted = useResetRecoilState(selectedSuppliedNameState)
+
+  const append = useCallback(
+    (selected: SearchAccountsHandingGoodsResult) => {
+      set((prev) => {
+        const exist = prev?.id === selected.id
+        return exist ? prev : selected
+      })
+    },
+    [set]
+  )
+  return {
+    set,
+    reseted,
+    append,
+  }
+}
+
+export function useSelectedSuppliedNameStateValue() {
+  return useRecoilValue(selectedSuppliedNameState)
+}
 
 // 위에 새로운
 export const purchasesProductState = atom<PurchaseProduct>({
