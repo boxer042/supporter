@@ -5,9 +5,11 @@ import AppLayout from './components/AppLayout'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import Account from './pages/Account'
-import Purchase from './pages/Purchase'
 import Product from './pages/Product'
-
+import Header from './components/Header/Header'
+import Workspaces from './pages/Workspaces/Workspaces'
+import Purchae from './components/Purchase/Purchae'
+import Purchase from './pages/Purchase/Purchase'
 function App() {
   return (
     <>
@@ -15,6 +17,9 @@ function App() {
         <Route
           path={[
             '/',
+            '/workspaces',
+            '/workspaces/purchase',
+            '/reports',
             '/account',
             '/account/:id',
             '/product',
@@ -24,25 +29,40 @@ function App() {
           exact
         >
           <AppLayout>
+            <AppLayout.Header>
+              <Header />
+            </AppLayout.Header>
             <AppLayout.Main>
               <Switch>
-                <Route path="/" exact>
+                <Route exact path={'/'}>
                   <Home />
                 </Route>
-                <Route path={['/account', '/account/:id']} exact>
+                <Route exact path={['/workspaces', '/workspaces/purchase']}>
+                  <Workspaces>
+                    <Switch>
+                      <Route exact path="/workspaces">
+                        <div>워크스페이스 홈</div>
+                      </Route>
+                      <Route exact path="/workspaces/purchase">
+                        <Purchase />
+                      </Route>
+                    </Switch>
+                  </Workspaces>
+                </Route>
+                <Route path="/reports">
+                  <div>ddd</div>
+                </Route>
+                <Route path={['/account', '/account/:id']}>
                   <Account />
                 </Route>
-                <Route path={['/product', '/product/purchase']} exact>
+                <Route path={['/product', '/product/purchase']}>
                   <Product />
                 </Route>
-                <Route path={['/purchase', '/purchases/:id']} exact>
-                  <Purchase />
+                <Route path={['/purchase', '/purchases/:id']}>
+                  <Purchae />
                 </Route>
               </Switch>
             </AppLayout.Main>
-            <AppLayout.Footer>
-              <Footer />
-            </AppLayout.Footer>
           </AppLayout>
         </Route>
       </Switch>
@@ -62,6 +82,7 @@ const globalStyle = css`
   }
   html {
     box-sizing: border-box;
+
     * {
       box-sizing: inherit;
     }
