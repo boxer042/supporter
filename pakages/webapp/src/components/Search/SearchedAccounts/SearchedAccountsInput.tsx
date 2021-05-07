@@ -120,7 +120,7 @@ function SearchedAccountsInput({}: SearchedAccountsInputProps) {
     }
     setKeyword(e.target.value)
   }
-
+  console.log(selectedIndex)
   return (
     <div>
       <Input

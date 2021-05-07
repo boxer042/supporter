@@ -27,7 +27,7 @@ function PrimaryInput({
     <div css={base}>
       {prefix !== undefined && <div css={prefixStyle}>{prefix}</div>}
       <input css={inputStyle} value={value} {...rest} />
-      {clearButton !== undefined && (
+      {clearButton !== undefined && value !== '' && (
         <div css={clearStyle} onClick={onClear}>
           <BiX />
         </div>

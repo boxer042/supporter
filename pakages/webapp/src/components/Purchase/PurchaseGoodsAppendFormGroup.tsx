@@ -1,7 +1,46 @@
 import React, { useState } from 'react'
 import PrimaryInput from '../PrimaryInput/PrimaryInput'
-import Select from 'react-select'
 import { css } from '@emotion/react'
+import InputSelect from '../InputSelect/InputSelect'
+
+const data = [
+  {
+    name: '선일농기계',
+    office: '023334444',
+  },
+  {
+    name: '홈앤가든',
+    office: '023334444',
+  },
+  {
+    name: '(주)범양',
+    office: '023334444',
+  },
+  {
+    name: '(주)범양',
+    office: '023334444',
+  },
+  {
+    name: '(주)범양',
+    office: '023334444',
+  },
+  {
+    name: '(주)범양',
+    office: '023334444',
+  },
+  {
+    name: '(주)범양',
+    office: '023334444',
+  },
+  {
+    name: '(주)범양',
+    office: '023334444',
+  },
+  {
+    name: '(주)범양',
+    office: '023334444',
+  },
+]
 
 export type PurchaseGoodsAppendFormGroupProps = {}
 
@@ -10,6 +49,7 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
 
   return (
     <div css={formStyle}>
+      <InputSelect results={data} />
       <br />
       <br />
       <PrimaryInput

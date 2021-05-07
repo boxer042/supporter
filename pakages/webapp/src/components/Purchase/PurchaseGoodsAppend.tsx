@@ -32,7 +32,6 @@ const block = css`
   /* height: calc(100vh - 3rem); */
   height: 100%;
   border-left: 1px solid ${palette.grey[300]};
-
   display: flex;
   flex-direction: column;
   padding-left: 1rem;
