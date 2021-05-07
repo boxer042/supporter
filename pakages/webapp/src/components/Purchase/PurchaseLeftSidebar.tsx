@@ -33,6 +33,7 @@ const block = css`
   display: flex;
   flex-direction: column;
   width: 100%;
+  color: ${palette.base['base']};
 `
 
 const title = css`

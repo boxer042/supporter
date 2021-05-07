@@ -40,13 +40,12 @@ const block = css`
 `
 const header = css``
 const title = css`
-  /* font-size: 0.875rem;
-  font-weight: bold; */
+  color: ${palette.base['base']};
 `
 
 const description = css`
   font-size: 0.75rem;
-  color: ${palette.grey[500]};
+  color: ${palette.base['dec']};
 `
 
 const contents = css`

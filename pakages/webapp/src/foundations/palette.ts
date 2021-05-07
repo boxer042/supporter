@@ -1,3 +1,8 @@
+export const base = {
+  base: '#212121',
+  dec: '#a6a6a6',
+  line: '#e0e0e0',
+}
 export const red = {
   '50': '#ffebee',
   '100': '#ffcdd2',
@@ -341,4 +346,5 @@ export default {
   lightText: lightText,
   darkIcons: darkIcons,
   lightIcons: lightIcons,
+  base: base,
 }

@@ -56,7 +56,7 @@ const item = css`
   width: 5rem;
   height: 3.75rem;
   cursor: pointer;
-  color: ${palette.grey[800]};
+  color: ${palette.base['base']};
   text-decoration: none;
 
   &:hover {
