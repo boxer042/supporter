@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PrimaryInput from '../PrimaryInput/PrimaryInput'
 import { css } from '@emotion/react'
 import InputSelect from '../InputSelect/InputSelect'
+import PurchaseGoodsAppendSearchedAccount from './PurchaseGoodsAppendSearchedAccount'
 
 const data = [
   {
@@ -45,12 +46,13 @@ const data = [
 export type PurchaseGoodsAppendFormGroupProps = {}
 
 function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
+  const [keyword, setKeyword] = useState('')
   const [test, setTest] = useState('')
-
+  console.log(keyword)
   return (
     <div css={formStyle}>
-      <InputSelect results={data} />
-      <br />
+      <InputSelect results={data} keyword={keyword} />
+      <PurchaseGoodsAppendSearchedAccount />
       <br />
       <PrimaryInput
         prefix="￦"

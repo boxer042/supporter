@@ -5,12 +5,14 @@ import palette from '../../foundations/palette'
 import PrimaryInput from '../PrimaryInput/PrimaryInput'
 
 export type InputSelectProps = {
-  results?: any[] | null
+  results: any[] | null
+  keyword: string
 }
 
-function InputSelect({ results }: InputSelectProps) {
+function InputSelect({ results, keyword }: InputSelectProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const [value, setValue] = useState('')
+  const itemRef = useRef<HTMLDivElement>(null)
+  const [value, setValue] = useState(keyword)
   const [open, setOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [prevData, setPrevData] = useState<string[] | null>([])
@@ -18,7 +20,6 @@ function InputSelect({ results }: InputSelectProps) {
   useEffect(() => {
     // 인덱스 리셋
     if (!open) {
-      console.log('인덱스 리셋')
       setSelectedIndex(-1)
     }
   }, [open, setSelectedIndex])
@@ -38,7 +39,10 @@ function InputSelect({ results }: InputSelectProps) {
       case 'ArrowUp':
         if (!results || results.length === 0) return
         if (selectedIndex === -1) {
-          setSelectedIndex(results.length - 1)
+          setSelectedIndex(-1)
+          return
+        }
+        if (selectedIndex === 0 && results[0]) {
           return
         }
         setSelectedIndex(selectedIndex - 1)
@@ -47,20 +51,19 @@ function InputSelect({ results }: InputSelectProps) {
       case 'ArrowDown':
         if (!results || results.length === 0) return
         if (selectedIndex === results.length - 1) {
-          setSelectedIndex(-1)
           return
         }
-        const one = ref.current?.scrollTop
-        const two = ref.current?.scrollHeight
-        if (one || two !== null) {
-          const tree = one - two
-        }
-
         setSelectedIndex(selectedIndex + 1)
         return
 
       case 'Enter':
-        return console.log('엔터')
+        const selectedItem = results?.[selectedIndex]
+        if (selectedIndex === -1) {
+          return
+        }
+        if (!selectedItem) return
+        console.log(selectedItem)
+        return
     }
   }
 
@@ -81,17 +84,38 @@ function InputSelect({ results }: InputSelectProps) {
   const onFocus = () => setOpen(true)
 
   useOnClickOutside(ref, onClose)
-  // console.log(selectedIndex)
+
+  const selectOffset = (selectedIndex: number) => {
+    if (!itemRef.current || !ref.current) {
+      return
+    }
+    if (selectedIndex === -1) return
+    const viewport = ref.current.scrollTop + ref.current.offsetHeight
+    const selectedOffset = itemRef.current.clientHeight * selectedIndex
+
+    if (viewport - 8 === selectedOffset) {
+      ref.current.scrollBy(0, 32)
+      return
+    } else if (ref.current.scrollTop > selectedOffset) {
+      ref.current.scrollBy(0, -32)
+      return
+    }
+  }
+  selectOffset(selectedIndex)
   // console.log(`전 데이터 ${prevData}`)
-  const lab = document.getElementsByClassName('selectWrapper')
-  const howWidth = ref
-  console.log(howWidth)
   return (
     <div css={block}>
       <PrimaryInput
         value={value}
         onChange={onChange}
         onFocus={onFocus}
+        onBlur={(e) => {
+          e.persist()
+          const relatedTarget = e.relatedTarget as HTMLElement | null
+          if (relatedTarget && relatedTarget.dataset.type === 'select-item') {
+            return
+          }
+        }}
         onKeyDown={onKeyDown}
       />
       {open && value !== '' && (
@@ -99,7 +123,11 @@ function InputSelect({ results }: InputSelectProps) {
           {results?.length === 0 ||
             (!results && <div css={test(selectedIndex === -1)}>{value}</div>)}
           {results?.map((result, i) => (
-            <div css={selectItem(i === selectedIndex, result.name === value)}>
+            <div
+              ref={itemRef}
+              css={selectItem(i === selectedIndex, result.name === value)}
+              data-type="select-item"
+            >
               <div>{i}</div>
               <div>{result.name}</div>
             </div>
@@ -130,8 +158,14 @@ const selectWrapper = css`
   margin-top: 2px;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-  max-height: 12rem;
+  max-height: 168px;
   overflow: auto;
+  &::-webkit-scrollbar {
+  }
+  &::-webkit-scrollbar-thumb {
+  }
+  &::-webkit-scrollbar-track {
+  }
 `
 const selectItem = (select: boolean, selected: boolean) => css`
   padding-left: 0.5rem;

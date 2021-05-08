@@ -49,8 +49,6 @@ function AccountMetadata({ accountId }: AccountMetadataProps) {
     getAccountData()
   }, [setAccount, accountId])
 
-  console.log(account)
-
   return (
     <div css={block}>
       <div css={header}>

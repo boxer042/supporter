@@ -4,7 +4,7 @@ export type PurchaesProps = {}
 
 function PurchaesTest({}: PurchaesProps) {
   const [value, setValue] = useState<number>(0)
-  console.log(value * 2)
+
   return (
     <div>
       <h1>테스트</h1>

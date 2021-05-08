@@ -1,43 +1,9 @@
-{
-	// Place your snippets for typescriptreact here. Each snippet is defined under a snippet name and has a prefix, body and 
-	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
-	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
-	// same ids are connected.
-	// Example:
-	// "Print to console": {
-	// 	"prefix": "log",
-	// 	"body": [
-	// 		"console.log('$1');",
-	// 		"$2"
-	// 	],
-	// 	"description": "Log output to console"
-	// }
-	"Create function component": {
-		"prefix": "fc",
-		"body": [
-			"import React from 'react'",
-			"",
-			"export type ${TM_FILENAME_BASE}Props = {}",
-			"",
-			"function ${TM_FILENAME_BASE} ({}: ${TM_FILENAME_BASE}Props) {",
-			"  return <div>${TM_FILENAME_BASE}</div>",
-			"}",
-			"",
-			"export default ${TM_FILENAME_BASE}",
-		],
-		"description": "Create function component"
-	},
-	"Export default" : {
-		"prefix": "ed",
-		"body": ["export { default } from './${TM_DIRECTORY/^.+\\\\/(.*)$/$1/}'"],
-		"description": "Export default"
-	},
-}
-
 import { css } from '@emotion/react'
 import React, { useEffect, useRef, useState } from 'react'
 import useOnClickOutside from 'use-onclickoutside'
 import palette from '../../foundations/palette'
+import useSearchAccountsQuery from '../../hooks/query/useSearchAccountsQuery'
+import { SearchAccountsResult } from '../../lib/api/accounts/searchAccounts'
 import PrimaryInput from '../PrimaryInput/PrimaryInput'
 
 export type PurchaseGoodsAppendSearchedAccountProps = {}
@@ -48,7 +14,12 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
   const [keyword, setKeyword] = useState('')
   const [open, setOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
-  const [prevData, setPrevData] = useState<string[] | null>([])
+  const [prevData, setPrevData] = useState<SearchAccountsResult[] | null>([])
+
+  const { data } = useSearchAccountsQuery(keyword, {
+    enabled: keyword !== "'",
+  })
+  const results = data
 
   useEffect(() => {
     // 인덱스 리셋
@@ -157,6 +128,7 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
             (!results && <div css={test(selectedIndex === -1)}>{keyword}</div>)}
           {results?.map((result, i) => (
             <div
+              key={result.id}
               ref={itemRef}
               css={selectItem(i === selectedIndex, result.name === keyword)}
               data-type="select-item"
@@ -169,7 +141,6 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
       )}
     </div>
   )
-}
 }
 
 export default PurchaseGoodsAppendSearchedAccount
@@ -222,4 +193,3 @@ const selectItem = (select: boolean, selected: boolean) => css`
     background: ${palette.grey[200]};
   }
 `
-

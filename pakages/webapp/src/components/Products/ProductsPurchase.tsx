@@ -22,8 +22,6 @@ function ProductsPurchase(props: ProductsPurchaseProps) {
     getProductsPurchaseData()
   }, [setProductsPurchase])
 
-  console.log(productsPurchase)
-
   return (
     <div>
       <div>공급받는 상품 총 수: {count}</div>
