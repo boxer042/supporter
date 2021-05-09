@@ -102,6 +102,7 @@ function InputSelect({ results, keyword }: InputSelectProps) {
     }
   }
   selectOffset(selectedIndex)
+  console.log(value)
   // console.log(`전 데이터 ${prevData}`)
   return (
     <div css={block}>
@@ -124,6 +125,7 @@ function InputSelect({ results, keyword }: InputSelectProps) {
             (!results && <div css={test(selectedIndex === -1)}>{value}</div>)}
           {results?.map((result, i) => (
             <div
+              key={result.id}
               ref={itemRef}
               css={selectItem(i === selectedIndex, result.name === value)}
               data-type="select-item"

@@ -1,25 +1,35 @@
 import { css } from '@emotion/react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import { useQueryClient } from 'react-query'
 import useOnClickOutside from 'use-onclickoutside'
 import palette from '../../foundations/palette'
-import useSearchAccountsQuery from '../../hooks/query/useSearchAccountsQuery'
+import useAccountByKeyword from '../../hooks/query/useAccountByKeyword'
 import { SearchAccountsResult } from '../../lib/api/accounts/searchAccounts'
 import PrimaryInput from '../PrimaryInput/PrimaryInput'
 
-export type PurchaseGoodsAppendSearchedAccountProps = {}
+export type PurchaseGoodsAppendSearchedAccountProps = {
+  keyword: string
+  setKeyword: Dispatch<SetStateAction<string>>
+}
 
-function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccountProps) {
+function PurchaseGoodsAppendSearchedAccount({
+  keyword,
+  setKeyword,
+}: PurchaseGoodsAppendSearchedAccountProps) {
+  const queryClient = useQueryClient()
+
   const ref = useRef<HTMLDivElement>(null)
   const itemRef = useRef<HTMLDivElement>(null)
-  const [keyword, setKeyword] = useState('')
   const [open, setOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
-  const [prevData, setPrevData] = useState<SearchAccountsResult[] | null>([])
-
-  const { data } = useSearchAccountsQuery(keyword, {
-    enabled: keyword !== "'",
-  })
-  const results = data
+  const [prevData, setPrevData] = useState<any[] | null>([])
+  const { status, data, error, isFetching } = useAccountByKeyword(keyword)
 
   useEffect(() => {
     // 인덱스 리셋
@@ -41,27 +51,27 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
     e.preventDefault()
     switch (e.key) {
       case 'ArrowUp':
-        if (!results || results.length === 0) return
+        if (!data || data.length === 0) return
         if (selectedIndex === -1) {
           setSelectedIndex(-1)
           return
         }
-        if (selectedIndex === 0 && results[0]) {
+        if (selectedIndex === 0 && data[0]) {
           return
         }
         setSelectedIndex(selectedIndex - 1)
         return
 
       case 'ArrowDown':
-        if (!results || results.length === 0) return
-        if (selectedIndex === results.length - 1) {
+        if (!data || data.length === 0) return
+        if (selectedIndex === data.length - 1) {
           return
         }
         setSelectedIndex(selectedIndex + 1)
         return
 
       case 'Enter':
-        const selectedItem = results?.[selectedIndex]
+        const selectedItem = data?.[selectedIndex]
         if (selectedIndex === -1) {
           return
         }
@@ -111,6 +121,7 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
     <div css={block}>
       <PrimaryInput
         value={keyword}
+        setValue={setKeyword}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={(e) => {
@@ -121,12 +132,13 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
           }
         }}
         onKeyDown={onKeyDown}
+        clearButton
       />
       {open && keyword !== '' && (
         <div css={selectWrapper} ref={ref} className="selectWrapper">
-          {results?.length === 0 ||
-            (!results && <div css={test(selectedIndex === -1)}>{keyword}</div>)}
-          {results?.map((result, i) => (
+          {data?.length === 0 ||
+            (!data && <div css={test(selectedIndex === -1)}>{keyword}</div>)}
+          {data?.map((result, i) => (
             <div
               key={result.id}
               ref={itemRef}

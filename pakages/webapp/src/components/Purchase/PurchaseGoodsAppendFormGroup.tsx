@@ -46,13 +46,15 @@ const data = [
 export type PurchaseGoodsAppendFormGroupProps = {}
 
 function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
-  const [keyword, setKeyword] = useState('')
   const [test, setTest] = useState('')
-  console.log(keyword)
+  const [keyword, setKeyword] = useState('')
+  console.log('오', keyword)
   return (
     <div css={formStyle}>
-      <InputSelect results={data} keyword={keyword} />
-      <PurchaseGoodsAppendSearchedAccount />
+      <PurchaseGoodsAppendSearchedAccount
+        keyword={keyword}
+        setKeyword={setKeyword}
+      />
       <br />
       <PrimaryInput
         prefix="￦"
