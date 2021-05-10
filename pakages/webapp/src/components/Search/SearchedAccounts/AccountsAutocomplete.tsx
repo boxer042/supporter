@@ -33,6 +33,7 @@ function AccountsAutocomplete({
   const ref = useRef<HTMLDivElement>(null)
 
   useOnClickOutside(ref, onClose)
+  console.log('dd', results)
 
   if (!visible || !results || results.length === 0) return null
   return (

@@ -8,7 +8,7 @@ const accountsRoute: FastifyPluginCallback = (fastify, apts, done) => {
   fastify.get<{ Querystring: { keyword: string } }>(
     '/search',
     async (request, reply) => {
-      const search = request.query.keyword
+      const search = `'${request.query.keyword}`
       // const results = fastify.searchEngine
       //   .searchAccounts(search)
       //   .slice(0, 10)

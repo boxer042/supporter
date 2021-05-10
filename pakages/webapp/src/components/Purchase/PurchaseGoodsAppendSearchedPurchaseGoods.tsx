@@ -6,32 +6,39 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { useQueryClient } from 'react-query'
+import { useDebounce } from 'use-debounce/lib'
 import useOnClickOutside from 'use-onclickoutside'
+import {
+  usePurchaseGoodsSetState,
+  useSelectedGoodsSetState,
+} from '../../atoms/purchaseState'
 import palette from '../../foundations/palette'
-import useAccountByKeyword from '../../hooks/query/useAccountByKeyword'
-import { Account } from '../../hooks/types/Account'
+import usePurchaseGoodsByKeyword from '../../hooks/query/usePurchaseGoodsByKeyword'
+import { PurchaseGoods } from '../../hooks/types/Purchase'
 import PrimaryInput from '../PrimaryInput/PrimaryInput'
-import { useDebounce } from 'use-debounce'
-import { usePurchaseGoodsSetState } from '../../atoms/purchaseState'
+import { usePurchaseGoodsState } from '../../atoms/purchaseState'
 
-export type PurchaseGoodsAppendSearchedAccountProps = {}
+export type PurchaseGoodsAppendSearchedPurchaseGoodsProps = {
+  keyword: string
+  setKeyword: Dispatch<SetStateAction<string>>
+}
 
-function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccountProps) {
-  const [keyword, setKeyword] = useState('')
+function PurchaseGoodsAppendSearchedPurchaseGoods({
+  keyword,
+  setKeyword,
+}: PurchaseGoodsAppendSearchedPurchaseGoodsProps) {
   const [debouncedKeyword] = useDebounce(keyword, 300)
 
   const ref = useRef<HTMLDivElement>(null)
   const itemRef = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
-  const [prevData, setPrevData] = useState<Account[] | null>(null)
-  const queryClient = useQueryClient()
-  const { status, data, error, isFetching } = useAccountByKeyword(
+  const [prevData, setPrevData] = useState<PurchaseGoods[] | null>(null)
+  const { status, data, error, isFetching } = usePurchaseGoodsByKeyword(
     debouncedKeyword
   )
 
-  const setPurchaseGoods = usePurchaseGoodsSetState()
+  const setSelectedGoods = useSelectedGoodsSetState()
 
   useEffect(() => {
     if (!open) {
@@ -85,8 +92,15 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
           return
         }
         if (!selectedItem) return
-        setPurchaseGoods({ account_id: selectedItem.id })
-        setKeyword(selectedItem.name)
+        setSelectedGoods({
+          supplied_name: selectedItem.supplied_name,
+          include: selectedItem.include,
+          stock: selectedItem.stock,
+          supplied_value: selectedItem.supplied_value,
+          supplied_value_discount: selectedItem.supplied_value_discount,
+        })
+        console.log(selectedItem)
+        setKeyword(selectedItem.supplied_name)
         setOpen(false)
         return
     }
@@ -114,14 +128,15 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
     if (!itemRef.current || !ref.current) {
       return
     }
-    if (selectedIndex === -1) return
-    const viewport = ref.current.scrollTop + ref.current.offsetHeight
+    // if (selectedIndex === -1) return
+    const viewport = ref.current.scrollTop + ref.current.offsetHeight - 8
     const selectedOffset = itemRef.current.clientHeight * selectedIndex
-    if (viewport - 8 === selectedOffset) {
+    if (viewport - 32 === selectedOffset) {
       ref.current.scrollBy(0, 32)
       return
-    } else if (ref.current.scrollTop > selectedOffset) {
+    } else if (ref.current.scrollTop > selectedOffset + 32) {
       ref.current.scrollBy(0, -32)
+
       return
     }
   }
@@ -142,7 +157,7 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
           const relatedTarget = e.relatedTarget as HTMLElement | null
           if (
             relatedTarget &&
-            relatedTarget.dataset.type === 'select-account'
+            relatedTarget.dataset.type === 'select-purchaseGoods'
           ) {
             return
           }
@@ -152,17 +167,20 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
       />
       {!open || !results || results.length === 0 ? null : (
         <div css={selectWrapper} ref={ref}>
-          {/* <div css={createSelectItem(-1 === selectedIndex)}>
+          <div css={createSelectItem(-1 === selectedIndex)}>
             Create '{keyword}' 생성하기
-          </div> */}
+          </div>
           {results?.map((result, i) => (
             <div
               key={result.id}
               ref={itemRef}
-              css={selectItem(i === selectedIndex, result.name === keyword)}
-              data-type="select-account"
+              css={selectItem(
+                i === selectedIndex,
+                result.supplied_name === keyword
+              )}
+              data-type="select-purchaseGoods"
             >
-              <div>{result.name}</div>
+              <div>{result.supplied_name}</div>
             </div>
           ))}
         </div>
@@ -171,7 +189,7 @@ function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccou
   )
 }
 
-export default PurchaseGoodsAppendSearchedAccount
+export default PurchaseGoodsAppendSearchedPurchaseGoods
 
 const createSelectItem = (select: boolean) => css`
   padding-left: 0.5rem;
@@ -202,7 +220,6 @@ const selectWrapper = css`
   padding-bottom: 0.25rem;
   max-height: 168px;
   overflow: auto;
-  z-index: 100;
   &::-webkit-scrollbar {
   }
   &::-webkit-scrollbar-thumb {

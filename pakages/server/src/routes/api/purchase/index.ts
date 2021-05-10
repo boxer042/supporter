@@ -14,7 +14,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
   fastify.get<{ Querystring: { keyword: string } }>(
     '/search',
     async (request, reply) => {
-      const search = request.query.keyword
+      const search = `'${request.query.keyword}`
 
       const results = fastify.searchEngine
         .searchPurchaseGoods(search)
@@ -27,7 +27,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
           supplied_value: result.item.supplied_value,
           supplied_vat: result.item.supplied_vat,
           supplied_price: result.item.supplied_price,
-          supplied_value_price: result.item.supplied_value_discount,
+          supplied_value_discount: result.item.supplied_value_discount,
           purchase_value: result.item.purchase_value,
           purchase_vat: result.item.purchase_vat,
           purchase_price: result.item.purchase_vat,

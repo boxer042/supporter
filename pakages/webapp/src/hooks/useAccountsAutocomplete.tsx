@@ -23,6 +23,7 @@ export default function useAccountsAutocomplete(keyword: string) {
   useEffect(() => {
     if (data) {
       setPrevData(data)
+      console.log('ddd')
     }
   }, [data])
 

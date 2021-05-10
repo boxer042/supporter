@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import React from 'react'
+import { usePurchaseGoodsValueState } from '../../atoms/purchaseState'
 import PurchaseGoodsAppend from '../../components/Purchase/PurchaseGoodsAppend'
 import PurchaseLeftSidebar from '../../components/Purchase/PurchaseLeftSidebar'
 import palette from '../../foundations/palette'
@@ -7,6 +8,7 @@ import palette from '../../foundations/palette'
 export type PurchaseProps = {}
 
 function Purchase({}: PurchaseProps) {
+  const purchaseGoods = usePurchaseGoodsValueState()
   return (
     <div css={block}>
       <div css={leftSide}>
@@ -16,8 +18,11 @@ function Purchase({}: PurchaseProps) {
         </div>
       </div>
       <div css={contents}>
-        <div>Contents</div>
         <PurchaseGoodsAppend />
+        <div>
+          <div>{purchaseGoods?.account_id}</div>
+          <div>{purchaseGoods?.supplied_name}</div>
+        </div>
       </div>
     </div>
   )

@@ -25,18 +25,25 @@ function PurchaseGoodsAppend({}: PurchaseGoodsAppendProps) {
 
 export default PurchaseGoodsAppend
 
+// const block = css`
+//   position: fixed;
+//   right: 0;
+//   width: 24.5rem;
+//   /* height: calc(100vh - 3rem); */
+//   height: 100%;
+//   border-left: 1px solid ${palette.grey[300]};
+//   display: flex;
+//   flex-direction: column;
+//   padding-left: 1rem;
+//   padding-right: 1rem;
+// `
 const block = css`
-  position: fixed;
-  right: 0;
-  width: 24.5rem;
-  /* height: calc(100vh - 3rem); */
-  height: 100%;
-  border-left: 1px solid ${palette.grey[300]};
-  display: flex;
-  flex-direction: column;
   padding-left: 1rem;
   padding-right: 1rem;
+  display: flex;
+  flex-direction: column;
 `
+
 const header = css``
 const title = css`
   color: ${palette.base['base']};
