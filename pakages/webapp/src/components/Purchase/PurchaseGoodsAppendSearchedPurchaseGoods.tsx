@@ -98,6 +98,10 @@ function PurchaseGoodsAppendSearchedPurchaseGoods({
           stock: selectedItem.stock,
           supplied_value: selectedItem.supplied_value,
           supplied_value_discount: selectedItem.supplied_value_discount,
+          account: {
+            id: selectedItem.account.id,
+            name: selectedItem.account.name,
+          },
         })
         console.log(selectedItem)
         setKeyword(selectedItem.supplied_name)

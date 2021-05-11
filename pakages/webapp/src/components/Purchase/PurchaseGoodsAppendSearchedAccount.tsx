@@ -15,10 +15,15 @@ import PrimaryInput from '../PrimaryInput/PrimaryInput'
 import { useDebounce } from 'use-debounce'
 import { usePurchaseGoodsSetState } from '../../atoms/purchaseState'
 
-export type PurchaseGoodsAppendSearchedAccountProps = {}
+export type PurchaseGoodsAppendSearchedAccountProps = {
+  keyword: string
+  setKeyword: Dispatch<SetStateAction<string>>
+}
 
-function PurchaseGoodsAppendSearchedAccount({}: PurchaseGoodsAppendSearchedAccountProps) {
-  const [keyword, setKeyword] = useState('')
+function PurchaseGoodsAppendSearchedAccount({
+  keyword,
+  setKeyword,
+}: PurchaseGoodsAppendSearchedAccountProps) {
   const [debouncedKeyword] = useDebounce(keyword, 300)
 
   const ref = useRef<HTMLDivElement>(null)

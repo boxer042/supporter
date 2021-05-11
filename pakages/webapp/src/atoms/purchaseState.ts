@@ -16,6 +16,10 @@ export type SelectedGoodsType = {
   supplied_value: number
   supplied_value_discount: number
   stock: number
+  account: {
+    id: number
+    name: string
+  }
 }
 
 export const selectedGoodsState = atom<SelectedGoodsType | null>({

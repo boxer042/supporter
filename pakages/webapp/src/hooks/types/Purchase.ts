@@ -5,4 +5,8 @@ export interface PurchaseGoods {
   stock: number
   supplied_value: number
   supplied_value_discount: number
+  account: {
+    id: number
+    name: string
+  }
 }
