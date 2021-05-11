@@ -95,8 +95,11 @@ function PurchaseGoodsAppendSearchedPurchaseGoods({
         setSelectedGoods({
           supplied_name: selectedItem.supplied_name,
           include: selectedItem.include,
+          include_vat: selectedItem.include_vat,
           stock: selectedItem.stock,
           supplied_value: selectedItem.supplied_value,
+          supplied_vat: selectedItem.supplied_vat,
+          supplied_price: selectedItem.supplied_price,
           supplied_value_discount: selectedItem.supplied_value_discount,
           account: {
             id: selectedItem.account.id,

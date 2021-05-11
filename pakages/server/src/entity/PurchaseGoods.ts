@@ -23,6 +23,9 @@ export class PurchaseGoods {
   @Column({ default: true })
   include: boolean
 
+  @Column({ default: false })
+  include_vat: boolean
+
   @Column({ default: 0 })
   stock: number
 

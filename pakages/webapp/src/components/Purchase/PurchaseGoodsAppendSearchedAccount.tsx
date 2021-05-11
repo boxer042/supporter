@@ -16,11 +16,13 @@ import { useDebounce } from 'use-debounce'
 import { usePurchaseGoodsSetState } from '../../atoms/purchaseState'
 
 export type PurchaseGoodsAppendSearchedAccountProps = {
+  setAccountId: Dispatch<SetStateAction<number | null>>
   keyword: string
   setKeyword: Dispatch<SetStateAction<string>>
 }
 
 function PurchaseGoodsAppendSearchedAccount({
+  setAccountId,
   keyword,
   setKeyword,
 }: PurchaseGoodsAppendSearchedAccountProps) {
@@ -53,9 +55,10 @@ function PurchaseGoodsAppendSearchedAccount({
   useEffect(() => {
     if (keyword === '') {
       setPrevData(null)
+      setAccountId(null)
     }
     setSelectedIndex(-1)
-  }, [keyword, setSelectedIndex])
+  }, [keyword, setSelectedIndex, setAccountId])
 
   const onSelect = () => {}
 
@@ -90,7 +93,7 @@ function PurchaseGoodsAppendSearchedAccount({
           return
         }
         if (!selectedItem) return
-        setPurchaseGoods({ account_id: selectedItem.id })
+        setAccountId(selectedItem.id)
         setKeyword(selectedItem.name)
         setOpen(false)
         return

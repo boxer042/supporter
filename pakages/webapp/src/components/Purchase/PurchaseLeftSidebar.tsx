@@ -11,7 +11,7 @@ function PurchaseLeftSidebar({}: PurchaseLeftSidebarProps) {
       <div css={title}>Purchase Goods</div>
       <div css={itemList}>
         <div css={item}>
-          <div css={name}>구매 상품 전체보기</div>
+          <div css={name}>구매상품 전체보기</div>
           <BiChevronRight />
         </div>
         <div css={item}>
@@ -20,6 +20,16 @@ function PurchaseLeftSidebar({}: PurchaseLeftSidebarProps) {
         </div>
         <div css={item}>
           <div css={name}>상품 주문</div>
+          <BiChevronRight />
+        </div>
+      </div>
+      <div css={divider}>
+        <hr />
+      </div>
+      <div css={title}>Purchased Goods</div>
+      <div css={itemList}>
+        <div css={item}>
+          <div css={name}>구매상품 현황</div>
           <BiChevronRight />
         </div>
       </div>
@@ -65,3 +75,17 @@ const item = css`
 `
 
 const name = css``
+
+const divider = css`
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
+  hr {
+    border: unset;
+    border-radius: 2px;
+    border-top: 1px solid ${palette.grey[300]};
+    width: 100%;
+    height: 1px;
+  }
+`

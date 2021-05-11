@@ -6,14 +6,32 @@ export const purchaseGoodsState = atom<PurchaseGoodsStateType | null>({
 })
 
 export type PurchaseGoodsStateType = {
-  account_id?: number
-  supplied_name?: string
+  purchased_at: string
+  account_id: number
+  supplied_name: string
+  include: boolean
+  include_vat: boolean
+  supplied_value: number
+  supplied_vat: number
+  supplied_price: number
+  supplied_value_discount: number
+  quantity: number
+  total_supplied_value_discount: number
+  purchase_value: number
+  purchase_vat: number
+  purchase_price: number
+  total_purchase_value: number
+  total_purchase_vat: number
+  total_purchase_price: number
 }
 
 export type SelectedGoodsType = {
   supplied_name: string
   include: boolean
+  include_vat: boolean
   supplied_value: number
+  supplied_vat: number
+  supplied_price: number
   supplied_value_discount: number
   stock: number
   account: {

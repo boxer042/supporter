@@ -23,6 +23,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
           id: result.item.id,
           supplied_name: result.item.supplied_name,
           include: result.item.include,
+          include_vat: result.item.include_vat,
           stock: result.item.stock,
           supplied_value: result.item.supplied_value,
           supplied_vat: result.item.supplied_vat,
@@ -36,8 +37,8 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
       reply.send(results)
     }
   )
-
-  fastify.get('/products', async (request, reply) => {
+  //구매 상품 현황
+  fastify.get('/purchasedGoods', async (request, reply) => {
     const purchaseProducts = await purchaseGoodsRepo.find({
       relations: ['account'],
     })
@@ -81,6 +82,8 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
   //   }
   // )
 
+  // New Purchase Goods
+
   // Purchase
   fastify.post<{
     Body: {
@@ -95,7 +98,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
       supplied_value_discount: number
       total_supplied_value_discount: number
     }
-  }>('/add', async (request, reply) => {
+  }>('/append', async (request, reply) => {
     const {
       purchased_at,
       account_id,
@@ -184,8 +187,10 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
       // }
 
       const writePurchase = new Purchase()
+      writePurchase.purchased_at = purchased_at
       writePurchase.supplied_name = purchaseGoods
       writePurchase.include = include
+      writePurchase.include_vat = include_vat
       writePurchase.quantity = quantity
       writePurchase.supplied_value = suppliedValue
       writePurchase.supplied_vat = suppliedVat
@@ -210,6 +215,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
         // 첫 등록 상품은 가격 히스토리에 저장 시키지 않도록 한다.
 
         purchaseGoods.include = include
+        purchaseGoods.include_vat = include_vat
         purchaseGoods.supplied_value = suppliedValue
         purchaseGoods.supplied_vat = suppliedVat
         purchaseGoods.supplied_price = suppliedPrice
@@ -226,6 +232,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
           const addPurchasePriceHistory = new PurchasePriceHistory()
           addPurchasePriceHistory.supplied_name = purchaseGoods
           addPurchasePriceHistory.prev_include = include
+          addPurchasePriceHistory.prev_include_vat = include_vat
           addPurchasePriceHistory.prev_supplied_value = suppliedValue
           addPurchasePriceHistory.prev_supplied_vat = suppliedVat
           addPurchasePriceHistory.prev_supplied_price = suppliedPrice

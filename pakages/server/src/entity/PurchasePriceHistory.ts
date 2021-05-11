@@ -24,6 +24,8 @@ export class PurchasePriceHistory {
 
   @Column({ default: true })
   prev_include: boolean
+  @Column({ default: false })
+  prev_include_vat: boolean
 
   @CreateDateColumn()
   change_price_at: Date
