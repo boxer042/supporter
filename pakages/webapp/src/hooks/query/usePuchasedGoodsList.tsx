@@ -12,3 +12,8 @@ async function getPurchasedGoodsList() {
 export default function usePurchasedGoodsList() {
   return useQuery(['purchasedGoodsList'], () => getPurchasedGoodsList())
 }
+
+// {
+//   // Refetch the data every second
+//   refetchInterval: 1000,
+// }

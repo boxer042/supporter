@@ -10,6 +10,9 @@ import Header from './components/Header/Header'
 import Workspaces from './pages/Workspaces/Workspaces'
 import Purchae from './components/Purchase/Purchae'
 import Purchase from './pages/Purchase/Purchase'
+import PurchasedGoodsList from './components/Purchase/PurchasedGoodsList'
+import PurchaseGoodsAppend from './components/Purchase/PurchaseGoodsAppend'
+import PurchaseList from './components/Purchase/Purchased/Purchased'
 function App() {
   return (
     <>
@@ -19,6 +22,8 @@ function App() {
             '/',
             '/workspaces',
             '/workspaces/purchase',
+            '/workspaces/purchase/list',
+            '/workspaces/purchase/appendgoods',
             '/reports',
             '/account',
             '/account/:id',
@@ -37,14 +42,42 @@ function App() {
                 <Route exact path={'/'}>
                   <Home />
                 </Route>
-                <Route exact path={['/workspaces', '/workspaces/purchase']}>
+                <Route
+                  exact
+                  path={[
+                    '/workspaces',
+                    '/workspaces/purchase',
+                    '/workspaces/purchase/list',
+                    '/workspaces/purchase/appendgoods',
+                  ]}
+                >
                   <Workspaces>
                     <Switch>
                       <Route exact path="/workspaces">
                         <div>워크스페이스 홈</div>
                       </Route>
-                      <Route exact path="/workspaces/purchase">
-                        <Purchase />
+                      <Route
+                        exact
+                        path={[
+                          '/workspaces/purchase',
+                          '/workspaces/purchase/list',
+                          '/workspaces/purchase/appendgoods',
+                        ]}
+                      >
+                        <Purchase>
+                          <Switch>
+                            <Route exact path="/workspaces/purchase/list">
+                              <PurchaseList />
+                            </Route>
+                            <Route
+                              exact
+                              path="/workspaces/purchase/appendgoods"
+                            >
+                              <PurchaseGoodsAppend />
+                              <PurchasedGoodsList />
+                            </Route>
+                          </Switch>
+                        </Purchase>
                       </Route>
                     </Switch>
                   </Workspaces>

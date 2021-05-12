@@ -6,18 +6,17 @@ import PurchaseGoodsAppend from '../../components/Purchase/PurchaseGoodsAppend'
 import PurchaseLeftSidebar from '../../components/Purchase/PurchaseLeftSidebar'
 import palette from '../../foundations/palette'
 
-export type PurchaseProps = {}
+export type PurchaseProps = {
+  children: React.ReactNode
+}
 
-function Purchase({}: PurchaseProps) {
+function Purchase({ children }: PurchaseProps) {
   return (
     <div css={block}>
       <div css={leftSide}>
         <PurchaseLeftSidebar />
       </div>
-      <div css={contents}>
-        <PurchaseGoodsAppend />
-        <PurchasedGoodsList />
-      </div>
+      <div css={contents}>{children}</div>
     </div>
   )
 }

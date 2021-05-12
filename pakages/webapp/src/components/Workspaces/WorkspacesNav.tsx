@@ -30,7 +30,7 @@ export default function WorkspacesNav(props: TWorkspacesNavProps) {
         <BiPoll css={icon} />
         <div css={name}>모니터링</div>
       </NavLink>
-      <NavLink css={item} to="/workspaces/purchase" exact>
+      <NavLink css={item} to="/workspaces/purchase">
         <BiListMinus css={icon} />
         <div css={name}>구매</div>
       </NavLink>

@@ -14,6 +14,7 @@ import { useSelectedGoodsValueState } from './../../atoms/purchaseState'
 import moment from 'moment'
 import useAppendPurchaseGoods from './../../hooks/query/useAppendPurchaseGoods'
 import appendPurchaseGoods from '../../lib/api/purchases/appendPurchaseGoods'
+import PrimaryButton from '../PrimaryButton/PrimaryButton'
 
 export type PurchaseGoodsAppendFormGroupProps = {}
 
@@ -21,16 +22,15 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
   const [accountName, setAccountName] = useState('')
   const [accountId, setAccountId] = useState<number | null>(null)
   const [suppliedName, setSuppliedName] = useState('')
-  const [totalSuppliedValueDiscount, setTotalSuppliedValueDiscount] = useState(
-    '0'
-  )
+  const [totalSuppliedValueDiscount, setTotalSuppliedValueDiscount] =
+    useState('0')
   const selectedGoods = useSelectedGoodsValueState()
 
-  console.log(moment('2021-05-11T10:00:49.350Z').format('LLLLL'))
+  // console.log(moment('2021-05-11T10:00:49.350Z').format('LLLLL'))
   const [inputs, setInputs] = useState({
     createdAt: moment().format('YYYY-MM-DD'),
     purchasedAt: moment().format('YYYY-MM-DD'),
-    include: false,
+    include: true,
     includeVat: false,
     suppliedValue: '0',
     suppliedVat: '0',
@@ -84,16 +84,19 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
       suppliedValue: selectedGoods.supplied_value.toLocaleString(),
       suppliedVat: selectedGoods.supplied_vat.toLocaleString(),
       suppliedPrice: selectedGoods.supplied_price.toLocaleString(),
-      suppliedValueDiscount: selectedGoods.supplied_value_discount.toLocaleString(),
+      suppliedValueDiscount:
+        selectedGoods.supplied_value_discount.toLocaleString(),
     })
   }, [selectedGoods])
 
   useEffect(() => {
     // 정수형으로 변환
-    const qty = parseInt(inputs.qty.replace(/[^\d]+/g, ''))
-    const suppliedValue = parseInt(inputs.suppliedValue.replace(/[^\d]+/g, ''))
+    const qty = parseInt(inputs.qty.replace(/\$\s?|(,*)/g, ''))
+    const suppliedValue = parseInt(
+      inputs.suppliedValue.replace(/\$\s?|(,*)/g, '')
+    )
     const suppliedValueDiscount = parseInt(
-      inputs.suppliedValueDiscount.replace(/[^\d]+/g, '')
+      inputs.suppliedValueDiscount.replace(/\$\s?|(,*)/g, '')
     )
     const purchaseValue = suppliedValue - suppliedValueDiscount
     const purchaseVat = purchaseValue * 0.1
@@ -104,19 +107,29 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
     const totalPurchasePrice = totalPurchaseValue * 1.1
 
     setAutoInputs({
-      purchaseValue: purchaseValue.toLocaleString(),
-      purchaseVat: purchaseVat.toLocaleString(),
-      purchasePrice: purchasePrice.toLocaleString(),
-      totalPurchaseValue: totalPurchaseValue.toLocaleString(),
-      totalPurchaseVat: totalPurchaseVat.toLocaleString(),
-      totalPurchasePrice: totalPurchasePrice.toLocaleString(),
+      purchaseValue: purchaseValue
+        .toFixed()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+      purchaseVat: purchaseVat.toFixed().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+      purchasePrice: purchasePrice
+        .toFixed()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+      totalPurchaseValue: totalPurchaseValue
+        .toFixed()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+      totalPurchaseVat: totalPurchaseVat
+        .toFixed()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+      totalPurchasePrice: totalPurchasePrice
+        .toFixed()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
     })
   }, [inputs])
 
   useEffect(() => {
-    const qty = parseInt(inputs.qty.replace(/[^\d]+/g, ''))
+    const qty = parseInt(inputs.qty.replace(/\$\s?|(,*)/g, ''))
     const suppliedValueDiscount = parseInt(
-      inputs.suppliedValueDiscount.replace(/[^\d]+/g, '')
+      inputs.suppliedValueDiscount.replace(/\$\s?|(,*)/g, '')
     )
     const totalSuppliedValueDiscount = suppliedValueDiscount * qty
     setTotalSuppliedValueDiscount(totalSuppliedValueDiscount.toLocaleString())
@@ -124,7 +137,7 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    const number = parseInt(value.replace(/[^\d]+/g, ''))
+    const number = parseInt(value.replace(/\$\s?|(,*)/g, ''))
 
     if (name === 'suppliedValue') {
       if (isNaN(number)) {
@@ -162,8 +175,8 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
     if (inputs.qty === '0') {
       return
     }
-    const number = parseInt(value.replace(/[^\d]+/g, ''))
-    const qty = parseInt(inputs.qty.replace(/[^\d]+/g, ''))
+    const number = parseInt(value.replace(/\$\s?|(,*)/g, ''))
+    const qty = parseInt(inputs.qty.replace(/\$\s?|(,*)/g, ''))
     if (isNaN(number)) {
       setTotalSuppliedValueDiscount('0')
       setInputs({
@@ -178,10 +191,11 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
       suppliedValueDiscount: (number / qty).toLocaleString(),
     })
   }
+
   const onChangeIncludeVat = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
     if (!includeVat) return
-    const number = parseInt(value.replace(/[^\d]+/g, ''))
+    const number = parseInt(value.replace(/\$\s?|(,*)/g, ''))
     if (isNaN(number)) {
       setInputs({
         ...inputs,
@@ -193,8 +207,12 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
     }
     setInputs({
       ...inputs,
-      suppliedValue: (number / 1.1).toLocaleString(),
-      suppliedVat: ((number / 1.1) * 0.1).toLocaleString(),
+      suppliedValue: (number / 1.1)
+        .toFixed()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+      suppliedVat: ((number / 1.1) * 0.1)
+        .toFixed()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
       suppliedPrice: number.toLocaleString(),
     })
   }
@@ -203,10 +221,10 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
     if (!accountId) {
       return
     }
-    if (qty === '0') {
-      console.log('수량 0')
-      return
-    }
+    // if (qty === '0') {
+    //   console.log('수량 0')
+    //   return
+    // }
 
     const purchaseGoods = {
       purchased_at: purchasedAt,
@@ -214,28 +232,81 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
       supplied_name: suppliedName,
       include: include,
       include_vat: includeVat,
-      supplied_value: parseInt(suppliedValue.replace(/[^\d]+/g, '')),
-      supplied_vat: parseInt(suppliedVat.replace(/[^\d]+/g, '')),
-      supplied_price: parseInt(suppliedPrice.replace(/[^\d]+/g, '')),
+      supplied_value: parseInt(suppliedValue.replace(/\$\s?|(,*)/g, '')),
+      supplied_vat: parseInt(suppliedVat.replace(/\$\s?|(,*)/g, '')),
+      supplied_price: parseInt(suppliedPrice.replace(/\$\s?|(,*)/g, '')),
       supplied_value_discount: parseInt(
-        suppliedValueDiscount.replace(/[^\d]+/g, '')
+        suppliedValueDiscount.replace(/\$\s?|(,*)/g, '')
       ),
-      quantity: parseInt(qty.replace(/[^\d]+/g, '')),
+      quantity: parseInt(qty.replace(/\$\s?|(,*)/g, '')),
       total_supplied_value_discount: parseInt(
-        totalSuppliedValueDiscount.replace(/[^\d]+/g, '')
+        totalSuppliedValueDiscount.replace(/\$\s?|(,*)/g, '')
       ),
-      purchase_value: parseInt(purchaseValue.replace(/[^\d]+/g, '')),
-      purchase_vat: parseInt(purchaseVat.replace(/[^\d]+/g, '')),
-      purchase_price: parseInt(purchasePrice.replace(/[^\d]+/g, '')),
-      total_purchase_value: parseInt(totalPurchaseValue.replace(/[^\d]+/g, '')),
-      total_purchase_vat: parseInt(totalPurchaseVat.replace(/[^\d]+/g, '')),
-      total_purchase_price: parseInt(totalPurchaseVat.replace(/[^\d]+/g, '')),
+      purchase_value: parseInt(purchaseValue.replace(/\$\s?|(,*)/g, '')),
+      purchase_vat: parseInt(purchaseVat.replace(/\$\s?|(,*)/g, '')),
+      purchase_price: parseInt(purchasePrice.replace(/\$\s?|(,*)/g, '')),
+      total_purchase_value: parseInt(
+        totalPurchaseValue.replace(/\$\s?|(,*)/g, '')
+      ),
+      total_purchase_vat: parseInt(totalPurchaseVat.replace(/\$\s?|(,*)/g, '')),
+      total_purchase_price: parseInt(
+        totalPurchaseVat.replace(/\$\s?|(,*)/g, '')
+      ),
     }
 
     setPurchaseGoods(purchaseGoods)
     appendPurchaseGoods(purchaseGoods)
+    // reset
+    // setAccountId(null)
+    // setAccountName('')
+    setSuppliedName('')
+    setTotalSuppliedValueDiscount('0')
+    setInputs({
+      createdAt: moment().format('YYYY-MM-DD'),
+      purchasedAt: purchasedAt,
+      include: include,
+      includeVat: includeVat,
+      suppliedValue: '0',
+      suppliedVat: '0',
+      suppliedPrice: '0',
+      suppliedValueDiscount: '0',
+      qty: '0',
+    })
+    setAutoInputs({
+      purchaseValue: '0',
+      purchaseVat: '0',
+      purchasePrice: '0',
+      totalPurchaseValue: '0',
+      totalPurchaseVat: '0',
+      totalPurchasePrice: '0',
+    })
   }
 
+  const reset = () => {
+    setAccountId(null)
+    setAccountName('')
+    setSuppliedName('')
+    setTotalSuppliedValueDiscount('0')
+    setInputs({
+      createdAt: moment().format('YYYY-MM-DD'),
+      purchasedAt: moment().format('YYYY-MM-DD'),
+      include: true,
+      includeVat: false,
+      suppliedValue: '0',
+      suppliedVat: '0',
+      suppliedPrice: '0',
+      suppliedValueDiscount: '0',
+      qty: '0',
+    })
+    setAutoInputs({
+      purchaseValue: '0',
+      purchaseVat: '0',
+      purchasePrice: '0',
+      totalPurchaseValue: '0',
+      totalPurchaseVat: '0',
+      totalPurchasePrice: '0',
+    })
+  }
   return (
     <div css={formStyle}>
       <div css={formItem}>
@@ -250,7 +321,6 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
           value={purchasedAt}
           onChange={(e) => {
             setInputs({ ...inputs, purchasedAt: e.target.value })
-            console.log(purchasedAt)
           }}
         />
       </div>
@@ -396,9 +466,9 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
         <div css={label}>합계</div>
         <PrimaryInput prefix="￦" value={totalPurchasePrice} readOnly />
       </div>
-      <div>
-        <button>Reset</button>
-        <button onClick={onClick}>Add</button>
+      <div css={buttonBlock}>
+        <PrimaryButton onClick={reset}>초기화</PrimaryButton>
+        <PrimaryButton onClick={onClick}>추가하기</PrimaryButton>
       </div>
     </div>
   )
@@ -445,3 +515,7 @@ const purchaseInputFormItem = css`
 
 const formItem = css``
 const inputStyle = css``
+
+const buttonBlock = css`
+  margin-top: 0.5rem;
+`

@@ -4,6 +4,7 @@ import { Account } from '../../../entity/Account'
 import { Purchase } from '../../../entity/Purchase'
 import { PurchasePriceHistory } from '../../../entity/PurchasePriceHistory'
 import { PurchaseGoods } from './../../../entity/PurchaseGoods'
+import Fuse from 'fuse.js'
 
 const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
   const purchaseGoodsRepo = getRepository(PurchaseGoods)
@@ -15,28 +16,65 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
     '/search',
     async (request, reply) => {
       const search = `'${request.query.keyword}`
-
-      const results = fastify.searchEngine
-        .searchPurchaseGoods(search)
-        .slice(0, 10)
-        .map((result) => ({
-          id: result.item.id,
-          supplied_name: result.item.supplied_name,
-          include: result.item.include,
-          include_vat: result.item.include_vat,
-          stock: result.item.stock,
-          supplied_value: result.item.supplied_value,
-          supplied_vat: result.item.supplied_vat,
-          supplied_price: result.item.supplied_price,
-          supplied_value_discount: result.item.supplied_value_discount,
-          purchase_value: result.item.purchase_value,
-          purchase_vat: result.item.purchase_vat,
-          purchase_price: result.item.purchase_vat,
-          account: result.item.account,
-        }))
+      // const results = fastify.searchEngine
+      //   .searchPurchaseGoods(search)
+      //   .slice(0, 10)
+      //   .map((result) => ({
+      //     id: result.item.id,
+      //     supplied_name: result.item.supplied_name,
+      //     include: result.item.include,
+      //     include_vat: result.item.include_vat,
+      //     stock: result.item.stock,
+      //     supplied_value: result.item.supplied_value,
+      //     supplied_vat: result.item.supplied_vat,
+      //     supplied_price: result.item.supplied_price,
+      //     supplied_value_discount: result.item.supplied_value_discount,
+      //     purchase_value: result.item.purchase_value,
+      //     purchase_vat: result.item.purchase_vat,
+      //     purchase_price: result.item.purchase_vat,
+      //     account: result.item.account,
+      //   }))
+      const purchasedGoods = await purchaseGoodsRepo.find({
+        relations: ['account', 'price_history', 'purchase'],
+      })
+      const purchasedGoodsFuse = new Fuse(purchasedGoods, {
+        useExtendedSearch: true,
+        includeScore: true,
+        findAllMatches: true,
+        distance: 4,
+        threshold: 0.2,
+        keys: [
+          {
+            name: 'supplied_name',
+            weight: 2,
+          },
+        ],
+      })
+      // console.log(search)
+      // if (search === "'") {
+      //   return reply.send(purchasedGoods)
+      // }
+      const results = purchasedGoodsFuse.search(search).map((result) => ({
+        id: result.item.id,
+        supplied_name: result.item.supplied_name,
+        include: result.item.include,
+        include_vat: result.item.include_vat,
+        stock: result.item.stock,
+        supplied_value: result.item.supplied_value,
+        supplied_vat: result.item.supplied_vat,
+        supplied_price: result.item.supplied_price,
+        supplied_value_discount: result.item.supplied_value_discount,
+        purchase_value: result.item.purchase_value,
+        purchase_vat: result.item.purchase_vat,
+        purchase_price: result.item.purchase_vat,
+        account: result.item.account,
+        price_history: result.item.price_history,
+        purchase: result.item.purchase,
+      }))
       reply.send(results)
     }
   )
+
   //구매 상품 현황
   fastify.get('/purchasedGoods', async (request, reply) => {
     const purchaseProducts = await purchaseGoodsRepo.find({
@@ -44,6 +82,13 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
     })
 
     reply.send(purchaseProducts)
+  })
+  // 상품 구매 현황(전제보기)
+  fastify.get('/purchased', async (request, reply) => {
+    const purchased = await purchaseRepo.find({
+      relations: ['supplied_name', 'supplied_name.account'],
+    })
+    reply.send(purchased)
   })
 
   fastify.get<{ Params: { id: number } }>('/:id', async (request, reply) => {
@@ -83,7 +128,158 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
   // )
 
   // New Purchase Goods
+  fastify.post<{
+    Body: {
+      purchased_at: Date
+      account_id: number
+      supplied_name: string
+      include: boolean
+      include_vat: boolean
+      supplied_value: number
+      supplied_vat: number
+      supplied_price: number
+      supplied_value_discount: number
+      quantity: number
+      total_supplied_value_discount: number
+      purchase_value: number
+      purchase_vat: number
+      purchase_price: number
+      total_purchase_value: number
+      total_purchase_vat: number
+      total_purchase_price: number
+    }
+  }>('/goods/append', async (request, reply) => {
+    const {
+      purchased_at,
+      account_id,
+      supplied_name,
+      include,
+      include_vat,
+      supplied_value,
+      supplied_vat,
+      supplied_price,
+      supplied_value_discount,
+      quantity,
+      total_supplied_value_discount,
+      purchase_value,
+      purchase_vat,
+      purchase_price,
+      total_purchase_value,
+      total_purchase_vat,
+      total_purchase_price,
+    } = request.body
 
+    try {
+      // 거래처 조회
+      const accountExist = await accountsRepo.findOne(account_id)
+
+      if (!accountExist) {
+        reply.status(500)
+        reply.send({
+          code: 500,
+          error: 'Not Found Account Error',
+          message: '거래처를 찾을 수 없습니다.',
+        })
+        return
+      }
+
+      // 구매 상품 조회
+      let purchasedGoods = await purchaseGoodsRepo.findOne({ supplied_name })
+
+      if (!purchasedGoods) {
+        // 구매 상품 생성
+        const createPurchaseGoods = new PurchaseGoods()
+        createPurchaseGoods.supplied_name = supplied_name
+        createPurchaseGoods.account = accountExist
+        await purchaseGoodsRepo.save(createPurchaseGoods)
+        // 구매 상품 재조회
+        purchasedGoods = await purchaseGoodsRepo.findOne({ supplied_name })
+      }
+
+      // const appendPurchase = new Purchase()
+      // appendPurchase.purchased_at = purchased_at
+      // appendPurchase.supplied_name = purchasedGoods
+      // appendPurchase.include = include
+      // appendPurchase.include_vat = include_vat
+      // appendPurchase.quantity = quantity
+      // appendPurchase.supplied_value = supplied_value
+      // appendPurchase.supplied_vat = supplied_vat
+      // appendPurchase.supplied_price = supplied_price
+      // appendPurchase.supplied_value_discount = supplied_value_discount
+      // appendPurchase.total_supplied_value_discount = total_supplied_value_discount
+      // appendPurchase.purchase_value = purchase_value
+      // appendPurchase.purchase_vat = purchase_vat
+      // appendPurchase.purchase_price = purchase_price
+      // appendPurchase.total_purchase_value = total_purchase_value
+      // appendPurchase.total_purchase_vat = total_purchase_vat
+      // appendPurchase.total_purchase_price = total_purchase_price
+      // purchasedGoods.stock = purchasedGoods.stock + quantity
+
+      // // 가격 변경시 히스토리에 저장
+      // if (
+      //   appendPurchase.include !== purchasedGoods.include ||
+      //   appendPurchase.include_vat !== purchasedGoods.include_vat ||
+      //   appendPurchase.supplied_value !== purchasedGoods.supplied_value ||
+      //   appendPurchase.supplied_value_discount !==
+      //     purchasedGoods.supplied_value_discount ||
+      //   appendPurchase.purchase_value !== purchasedGoods.purchase_value
+      // ) {
+      //   // 만약 첫 등록상품으로 가격이 0이면 가격히스토리에 저장하지 않는다.
+      //   // 가격 변경 전 이전 가격을 가격히스토리에 기록한다.
+      //   if (purchasedGoods.supplied_value !== 0) {
+      //     const appendPurchasePriceHistory = new PurchasePriceHistory()
+      //     appendPurchasePriceHistory.supplied_name = purchasedGoods
+      //     appendPurchasePriceHistory.prev_include = purchasedGoods.include
+      //     appendPurchasePriceHistory.prev_include_vat =
+      //       purchasedGoods.include_vat
+      //     appendPurchasePriceHistory.prev_supplied_value =
+      //       purchasedGoods.supplied_value
+      //     appendPurchasePriceHistory.prev_supplied_vat =
+      //       purchasedGoods.supplied_vat
+      //     appendPurchasePriceHistory.prev_supplied_price =
+      //       purchasedGoods.supplied_price
+      //     appendPurchasePriceHistory.prev_supplied_value_discount =
+      //       purchasedGoods.supplied_value_discount
+      //     appendPurchasePriceHistory.prev_purchase_value =
+      //       purchasedGoods.purchase_value
+      //     appendPurchasePriceHistory.prev_purchase_vat =
+      //       purchasedGoods.purchase_vat
+      //     appendPurchasePriceHistory.prev_purchase_price =
+      //       purchasedGoods.purchase_price
+      //     await purchasePriceHistoryRepo.save(appendPurchasePriceHistory)
+      //     console.log('가격변동으로 히스토리 기록')
+      //   }
+
+      //   // 기존 구매상품에 새로운 가격 업데이트
+      //   purchasedGoods.include = include
+      //   purchasedGoods.include_vat = include_vat
+      //   purchasedGoods.supplied_value = supplied_value
+      //   purchasedGoods.supplied_vat = supplied_vat
+      //   purchasedGoods.supplied_price = supplied_price
+      //   purchasedGoods.supplied_value_discount = supplied_value_discount
+      //   purchasedGoods.purchase_value = purchase_value
+      //   purchasedGoods.purchase_vat = purchase_vat
+      //   purchasedGoods.purchase_price = purchase_price
+      // }
+      // 기존 구매상품에 새로운 가격 업데이트
+      purchasedGoods.include = include
+      purchasedGoods.include_vat = include_vat
+      purchasedGoods.supplied_value = supplied_value
+      purchasedGoods.supplied_vat = supplied_vat
+      purchasedGoods.supplied_price = supplied_price
+      purchasedGoods.supplied_value_discount = supplied_value_discount
+      purchasedGoods.purchase_value = purchase_value
+      purchasedGoods.purchase_vat = purchase_vat
+      purchasedGoods.purchase_price = purchase_price
+
+      // 메모 일단 물품만 등록대도록 만들어놓왔음
+      await purchaseGoodsRepo.save(purchasedGoods)
+      // await purchaseRepo.save(appendPurchase)
+      reply.send(purchasedGoods)
+    } catch (error) {
+      console.log(error)
+    }
+  })
   // Purchase
   fastify.post<{
     Body: {
@@ -210,7 +406,9 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
         writePurchase.include !== purchaseGoods.include ||
         writePurchase.supplied_value_discount !==
           purchaseGoods.supplied_value_discount ||
-        writePurchase.purchase_value !== purchaseGoods.purchase_value
+        writePurchase.purchase_value !== purchaseGoods.purchase_value ||
+        writePurchase.include !== purchaseGoods.include ||
+        writePurchase.include_vat !== purchaseGoods.include_vat
       ) {
         // 첫 등록 상품은 가격 히스토리에 저장 시키지 않도록 한다.
 

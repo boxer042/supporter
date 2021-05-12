@@ -14,7 +14,7 @@ export default function HeaderNav(props: THeaderNavProps) {
         </NavLink>
       </div>
       <div css={item}>
-        <NavLink css={link} to="/workspaces" exact>
+        <NavLink css={link} to="/workspaces">
           Workspaces
         </NavLink>
       </div>

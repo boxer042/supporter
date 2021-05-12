@@ -16,6 +16,7 @@ function PurchasedGoodsList({}: PurchasedGoodsListProps) {
               <td>{item.id}</td>
               <td>{item.supplied_name}</td>
               <td>{item.stock}</td>
+              <td>{item.supplied_value.toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
@@ -29,6 +30,7 @@ export default PurchasedGoodsList
 const block = css`
   display: flex;
   flex-direction: column;
+  font-size: 0.75rem;
 `
 const listStyle = css`
   display: flex;

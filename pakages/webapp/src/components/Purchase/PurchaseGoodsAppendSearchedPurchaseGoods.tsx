@@ -106,7 +106,6 @@ function PurchaseGoodsAppendSearchedPurchaseGoods({
             name: selectedItem.account.name,
           },
         })
-        console.log(selectedItem)
         setKeyword(selectedItem.supplied_name)
         setOpen(false)
         return

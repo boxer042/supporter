@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import React from 'react'
 import { BiChevronRight } from 'react-icons/bi'
+import { NavLink } from 'react-router-dom'
 import palette from '../../foundations/palette'
 
 export type PurchaseLeftSidebarProps = {}
@@ -10,14 +11,14 @@ function PurchaseLeftSidebar({}: PurchaseLeftSidebarProps) {
     <div css={block}>
       <div css={title}>Purchase Goods</div>
       <div css={itemList}>
-        <div css={item}>
-          <div css={name}>구매상품 전체보기</div>
+        <NavLink to="/workspaces/purchase/list" css={item}>
+          <div css={name}>상품 구매 전체보기</div>
           <BiChevronRight />
-        </div>
-        <div css={item}>
+        </NavLink>
+        <NavLink to="/workspaces/purchase/appendgoods" css={item}>
           <div css={name}>상품 구매</div>
           <BiChevronRight />
-        </div>
+        </NavLink>
         <div css={item}>
           <div css={name}>상품 주문</div>
           <BiChevronRight />
@@ -65,12 +66,30 @@ const item = css`
   height: 1.75rem;
   padding-left: 1rem;
   padding-right: 1rem;
+  text-decoration: none;
+  color: ${palette.base['base']};
   svg {
     margin-top: 3px;
     font-size: 1.0625rem;
   }
   &:hover {
     background: ${palette.grey[200]};
+  }
+  &.active {
+    background: ${palette.grey[300]};
+  }
+`
+
+const link = css`
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #6b6b6b;
+  &:hover {
+    color: ${palette.grey[900]};
+  }
+  &.active {
+    color: ${palette.grey[900]};
   }
 `
 
