@@ -57,7 +57,7 @@ function App() {
                     '/workspaces/purchase/appendgoods',
                     '/workspaces/purchase/purchasedgoods',
                     '/workspaces/goods',
-                    '/workspaces/goods/saleGoods/append',
+                    '/workspaces/goods/salegoods/append',
                     '/workspaces/goods/purchasedgoods',
                   ]}
                 >
@@ -99,8 +99,8 @@ function App() {
                         exact
                         path={[
                           '/workspaces/goods',
-                          '/workspaces/goods/saleGoods/append',
-                          '/workspaces/goods/purchasedGoods',
+                          '/workspaces/goods/salegoods/append',
+                          '/workspaces/goods/purchasedgoods',
                         ]}
                       >
                         <Goods>
@@ -110,13 +110,13 @@ function App() {
                             </Route>
                             <Route
                               exact
-                              path="/workspaces/goods/saleGoods/append"
+                              path="/workspaces/goods/salegoods/append"
                             >
                               <SaleGoodsAppend />
                             </Route>
                             <Route
                               exact
-                              path="/workspaces/goods/purchasedGoods"
+                              path="/workspaces/goods/purchasedgoods"
                             >
                               <PurchasedGoodsList />
                             </Route>

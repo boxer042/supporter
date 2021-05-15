@@ -12,10 +12,12 @@ import {
 import { SetterOrUpdater } from 'recoil'
 
 export type SelectedPurchasedGoodsProps = {
+  purchasedGoodsList: SelectedPurchasedGoodsType[]
   setPurchasedGoodsList: SetterOrUpdater<SelectedPurchasedGoodsType[]>
 }
 
 function SelectedPurchasedGoods({
+  purchasedGoodsList,
   setPurchasedGoodsList,
 }: SelectedPurchasedGoodsProps) {
   const [suppliedName, setSuppliedName] = useState('')
@@ -25,6 +27,12 @@ function SelectedPurchasedGoods({
   useEffect(() => {
     if (!selectedPurchasedGoods) {
       return
+    }
+    const exist = purchasedGoodsList.find(
+      (pg) => pg.id === selectedPurchasedGoods.id
+    )
+    if (exist) {
+      return console.log('중복')
     }
     setPurchasedGoodsList((prevList) => [
       ...prevList,
@@ -49,6 +57,7 @@ function SelectedPurchasedGoods({
     selectedPurchasedGoods,
     setPurchasedGoodsList,
     resetSelectedPurchaseGoods,
+    purchasedGoodsList,
   ])
 
   return (

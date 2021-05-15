@@ -10,8 +10,8 @@ function GoodsLeftSidebar({}: GoodsLeftSidebarProps) {
     <div css={block}>
       <NavLink to="/workspaces/goods">dashboard</NavLink>
       <NavLink to="/workspaces/goods/saleGoods">판매상품</NavLink>
-      <NavLink to="/workspaces/goods/saleGoods/append">판매상품 추가</NavLink>
-      <NavLink to="/workspaces/goods/purchasedGoods">매입상품</NavLink>
+      <NavLink to="/workspaces/goods/salegoods/append">판매상품 추가</NavLink>
+      <NavLink to="/workspaces/goods/purchasedgoods">매입상품</NavLink>
     </div>
   )
 }

@@ -439,7 +439,8 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
           addPurchasePriceHistory.prev_supplied_value = suppliedValue
           addPurchasePriceHistory.prev_supplied_vat = suppliedVat
           addPurchasePriceHistory.prev_supplied_price = suppliedPrice
-          addPurchasePriceHistory.prev_supplied_value_discount = suppliedValueDiscount
+          addPurchasePriceHistory.prev_supplied_value_discount =
+            suppliedValueDiscount
           addPurchasePriceHistory.prev_purchase_value = purchaseValue
           addPurchasePriceHistory.prev_purchase_vat = purchaseVat
           addPurchasePriceHistory.prev_purchase_price = purchasePrice

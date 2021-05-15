@@ -10,6 +10,7 @@ export type PurchasedListProps = {
 function PurchasedList({ results }: PurchasedListProps) {
   return (
     <div css={block}>
+      <h2>상품 구매 전체보기</h2>
       <table css={table}>
         <thead>
           <tr>

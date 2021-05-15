@@ -21,7 +21,7 @@ export default function WorkspacesNav(props: TWorkspacesNavProps) {
         <BiListPlus css={icon} />
         <div css={name}>판매</div>
       </NavLink>
-      <NavLink css={item} to="/workspaces/goods" exact>
+      <NavLink css={item} to="/workspaces/goods">
         <BiPackage css={icon} />
         <div css={name}>상품</div>
       </NavLink>
