@@ -34,9 +34,8 @@ function PurchaseGoodsAppendSearchedAccount({
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [prevData, setPrevData] = useState<Account[] | null>(null)
   const queryClient = useQueryClient()
-  const { status, data, error, isFetching } = useAccountByKeyword(
-    debouncedKeyword
-  )
+  const { status, data, error, isFetching } =
+    useAccountByKeyword(debouncedKeyword)
 
   const setPurchaseGoods = usePurchaseGoodsSetState()
 

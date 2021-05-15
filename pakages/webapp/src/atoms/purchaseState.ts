@@ -1,4 +1,10 @@
-import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import {
+  atom,
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil'
 
 export const purchaseGoodsState = atom<PurchaseGoodsStateType | null>({
   key: 'purchaseGoods',
@@ -26,6 +32,7 @@ export type PurchaseGoodsStateType = {
 }
 
 export type SelectedGoodsType = {
+  id: number
   supplied_name: string
   include: boolean
   include_vat: boolean
@@ -33,6 +40,9 @@ export type SelectedGoodsType = {
   supplied_vat: number
   supplied_price: number
   supplied_value_discount: number
+  purchase_value: number
+  purchase_vat: number
+  purchase_price: number
   stock: number
   account: {
     id: number
@@ -63,4 +73,8 @@ export function useSelectedGoodsSetState() {
 
 export function useSelectedGoodsValueState() {
   return useRecoilValue(selectedGoodsState)
+}
+
+export function useResetSelectedGoodsState() {
+  return useResetRecoilState(selectedGoodsState)
 }

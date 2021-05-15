@@ -36,6 +36,9 @@ export interface PurchaseGoods {
   supplied_vat: number
   supplied_price: number
   supplied_value_discount: number
+  purchase_value: number
+  purchase_vat: number
+  purchase_price: number
   account: {
     id: number
     name: string

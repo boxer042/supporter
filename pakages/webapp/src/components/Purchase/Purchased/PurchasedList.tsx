@@ -15,14 +15,14 @@ function PurchasedList({ results }: PurchasedListProps) {
           <tr>
             <th>구매일</th>
             <th>거래처명</th>
-            <th>상품명</th>
-            <th css={numberTable}>수량</th>
-            <th css={numberTable}>단가</th>
-            <th css={numberTable}>할인</th>
-            <th css={numberTable}>구매가</th>
-            <th css={numberTable}>구매가액</th>
-            <th css={numberTable}>구매세액</th>
-            <th css={numberTable}>합계</th>
+            <th style={{ width: '25rem' }}>상품명</th>
+            <th>수량</th>
+            <th>단가</th>
+            <th>할인</th>
+            <th>구매가</th>
+            <th>구매가액</th>
+            <th>구매세액</th>
+            <th>합계</th>
           </tr>
         </thead>
         <tbody>
@@ -66,6 +66,7 @@ const block = css`
 `
 const table = css`
   border-collapse: collapse;
+
   td,
   th {
     height: 2.25rem;

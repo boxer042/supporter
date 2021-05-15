@@ -34,9 +34,8 @@ function PurchaseGoodsAppendSearchedPurchaseGoods({
   const [open, setOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [prevData, setPrevData] = useState<PurchaseGoods[] | null>(null)
-  const { status, data, error, isFetching } = usePurchaseGoodsByKeyword(
-    debouncedKeyword
-  )
+  const { status, data, error, isFetching } =
+    usePurchaseGoodsByKeyword(debouncedKeyword)
 
   const setSelectedGoods = useSelectedGoodsSetState()
 
@@ -93,6 +92,7 @@ function PurchaseGoodsAppendSearchedPurchaseGoods({
         }
         if (!selectedItem) return
         setSelectedGoods({
+          id: selectedItem.id,
           supplied_name: selectedItem.supplied_name,
           include: selectedItem.include,
           include_vat: selectedItem.include_vat,
@@ -101,6 +101,9 @@ function PurchaseGoodsAppendSearchedPurchaseGoods({
           supplied_vat: selectedItem.supplied_vat,
           supplied_price: selectedItem.supplied_price,
           supplied_value_discount: selectedItem.supplied_value_discount,
+          purchase_value: selectedItem.purchase_value,
+          purchase_vat: selectedItem.purchase_vat,
+          purchase_price: selectedItem.purchase_price,
           account: {
             id: selectedItem.account.id,
             name: selectedItem.account.name,

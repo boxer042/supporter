@@ -11,8 +11,8 @@ function PurchaseLeftSidebar({}: PurchaseLeftSidebarProps) {
     <div css={block}>
       <div css={title}>Purchase Goods</div>
       <div css={itemList}>
-        <NavLink to="/workspaces/purchase/list" css={item}>
-          <div css={name}>상품 구매 전체보기</div>
+        <NavLink to="/workspaces/purchase/purchasedgoods" css={item}>
+          <div css={name}>구매상품 현황</div>
           <BiChevronRight />
         </NavLink>
         <NavLink to="/workspaces/purchase/appendgoods" css={item}>
@@ -29,10 +29,10 @@ function PurchaseLeftSidebar({}: PurchaseLeftSidebarProps) {
       </div>
       <div css={title}>Purchased Goods</div>
       <div css={itemList}>
-        <div css={item}>
-          <div css={name}>구매상품 현황</div>
+        <NavLink to="/workspaces/purchase/list" css={item}>
+          <div css={name}>상품 구매 전체보기</div>
           <BiChevronRight />
-        </div>
+        </NavLink>
       </div>
     </div>
   )

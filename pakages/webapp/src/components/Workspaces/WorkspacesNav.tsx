@@ -1,23 +1,6 @@
 import { css } from '@emotion/react'
 import * as React from 'react'
-import {
-  BiBook,
-  BiListCheck,
-  BiListMinus,
-  BiListPlus,
-  BiLoader,
-  BiLoaderCircle,
-  BiPoll,
-  BiWindow,
-} from 'react-icons/bi'
-import {
-  ImFileEmpty,
-  ImFileText,
-  ImFileText2,
-  ImHome,
-  ImHome3,
-} from 'react-icons/im'
-import { AiOutlineHome } from 'react-icons/ai'
+import { BiListMinus, BiListPlus, BiPackage, BiPoll } from 'react-icons/bi'
 import { NavLink } from 'react-router-dom'
 import palette from '../../foundations/palette'
 
@@ -34,10 +17,13 @@ export default function WorkspacesNav(props: TWorkspacesNavProps) {
         <BiListMinus css={icon} />
         <div css={name}>구매</div>
       </NavLink>
-
       <NavLink css={item} to="/workspaces" exact>
         <BiListPlus css={icon} />
         <div css={name}>판매</div>
+      </NavLink>
+      <NavLink css={item} to="/workspaces/goods" exact>
+        <BiPackage css={icon} />
+        <div css={name}>상품</div>
       </NavLink>
     </div>
   )

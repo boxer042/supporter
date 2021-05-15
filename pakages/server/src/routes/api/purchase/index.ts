@@ -66,7 +66,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
         supplied_value_discount: result.item.supplied_value_discount,
         purchase_value: result.item.purchase_value,
         purchase_vat: result.item.purchase_vat,
-        purchase_price: result.item.purchase_vat,
+        purchase_price: result.item.purchase_price,
         account: result.item.account,
         price_history: result.item.price_history,
         purchase: result.item.purchase,
@@ -77,11 +77,16 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
 
   //구매 상품 현황
   fastify.get('/purchasedGoods', async (request, reply) => {
-    const purchaseProducts = await purchaseGoodsRepo.find({
-      relations: ['account'],
-    })
-
-    reply.send(purchaseProducts)
+    const purchaseGoods = await purchaseGoodsRepo
+      .createQueryBuilder('purchaseGoods')
+      .leftJoinAndSelect('purchaseGoods.account', 'account')
+      .orderBy('purchaseGoods.supplied_name', 'ASC')
+      .getMany()
+    //   connection.createQueryBuilder(Song, 'songs')
+    //  .leftJoinAndSelect('songs.singer', 'singer')
+    //  .orderBy('singer.name', 'ASC')
+    //  .getMany();
+    reply.send(purchaseGoods)
   })
   // 상품 구매 현황(전제보기)
   fastify.get('/purchased', async (request, reply) => {
@@ -261,7 +266,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
       //   purchasedGoods.purchase_vat = purchase_vat
       //   purchasedGoods.purchase_price = purchase_price
       // }
-      // 기존 구매상품에 새로운 가격 업데이트
+
       purchasedGoods.include = include
       purchasedGoods.include_vat = include_vat
       purchasedGoods.supplied_value = supplied_value

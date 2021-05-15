@@ -13,6 +13,8 @@ import Purchase from './pages/Purchase/Purchase'
 import PurchasedGoodsList from './components/Purchase/PurchasedGoodsList'
 import PurchaseGoodsAppend from './components/Purchase/PurchaseGoodsAppend'
 import PurchaseList from './components/Purchase/Purchased/Purchased'
+import Goods from './pages/Goods/Goods'
+import SaleGoodsAppend from './components/Goods/SaleGoods/SaleGoodsAppend'
 function App() {
   return (
     <>
@@ -24,6 +26,10 @@ function App() {
             '/workspaces/purchase',
             '/workspaces/purchase/list',
             '/workspaces/purchase/appendgoods',
+            '/workspaces/purchase/purchasedgoods',
+            '/workspaces/goods',
+            '/workspaces/goods/saleGoods/append',
+            '/workspaces/goods/purchasedgoods',
             '/reports',
             '/account',
             '/account/:id',
@@ -49,6 +55,10 @@ function App() {
                     '/workspaces/purchase',
                     '/workspaces/purchase/list',
                     '/workspaces/purchase/appendgoods',
+                    '/workspaces/purchase/purchasedgoods',
+                    '/workspaces/goods',
+                    '/workspaces/goods/saleGoods/append',
+                    '/workspaces/goods/purchasedgoods',
                   ]}
                 >
                   <Workspaces>
@@ -62,10 +72,17 @@ function App() {
                           '/workspaces/purchase',
                           '/workspaces/purchase/list',
                           '/workspaces/purchase/appendgoods',
+                          '/workspaces/purchase/purchasedgoods',
                         ]}
                       >
                         <Purchase>
                           <Switch>
+                            <Route
+                              exact
+                              path="/workspaces/purchase/purchasedgoods"
+                            >
+                              <PurchasedGoodsList />
+                            </Route>
                             <Route exact path="/workspaces/purchase/list">
                               <PurchaseList />
                             </Route>
@@ -74,10 +91,37 @@ function App() {
                               path="/workspaces/purchase/appendgoods"
                             >
                               <PurchaseGoodsAppend />
-                              <PurchasedGoodsList />
                             </Route>
                           </Switch>
                         </Purchase>
+                      </Route>
+                      <Route
+                        exact
+                        path={[
+                          '/workspaces/goods',
+                          '/workspaces/goods/saleGoods/append',
+                          '/workspaces/goods/purchasedGoods',
+                        ]}
+                      >
+                        <Goods>
+                          <Switch>
+                            <Route exact path="/workspaces/goods">
+                              ddd
+                            </Route>
+                            <Route
+                              exact
+                              path="/workspaces/goods/saleGoods/append"
+                            >
+                              <SaleGoodsAppend />
+                            </Route>
+                            <Route
+                              exact
+                              path="/workspaces/goods/purchasedGoods"
+                            >
+                              <PurchasedGoodsList />
+                            </Route>
+                          </Switch>
+                        </Goods>
                       </Route>
                     </Switch>
                   </Workspaces>

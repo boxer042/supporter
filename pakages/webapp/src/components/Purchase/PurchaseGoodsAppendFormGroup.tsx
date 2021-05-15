@@ -257,6 +257,7 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
     setPurchaseGoods(purchaseGoods)
     appendPurchaseGoods(purchaseGoods)
     // reset
+    // TODO: recoil selectedGoods 초기화 시켜주기
     // setAccountId(null)
     // setAccountName('')
     setSuppliedName('')
@@ -282,7 +283,7 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
     })
   }
 
-  const reset = () => {
+  const onReset = () => {
     setAccountId(null)
     setAccountName('')
     setSuppliedName('')
@@ -367,7 +368,6 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
         />
       </div>
 
-      <div>거래처 단가</div>
       <div css={supplied}>
         <div css={suppliedFormItem}>
           <div css={label}>공급가</div>
@@ -407,7 +407,6 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
         </div>
       </div>
 
-      <div>구매 단가</div>
       <div css={purchased}>
         <div css={purchasedFormItem}>
           <div css={label}>구매가</div>
@@ -467,7 +466,7 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
         <PrimaryInput prefix="￦" value={totalPurchasePrice} readOnly />
       </div>
       <div css={buttonBlock}>
-        <PrimaryButton onClick={reset}>초기화</PrimaryButton>
+        <PrimaryButton onClick={onReset}>초기화</PrimaryButton>
         <PrimaryButton onClick={onClick}>추가하기</PrimaryButton>
       </div>
     </div>

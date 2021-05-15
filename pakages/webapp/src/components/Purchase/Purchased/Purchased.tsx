@@ -7,6 +7,7 @@ export type PurchasedProps = {}
 
 function Purchased({}: PurchasedProps) {
   const { status, data, error, isFetching } = usePurchased()
+
   if (data?.length === 0) return null
   return (
     <div css={block}>
