@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import React, { useState } from 'react'
+import { BiTrash, BiTrashAlt } from 'react-icons/bi'
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil'
 import { SelectedPurchasedGoodsType } from '../../../atoms/saleGoodsState'
 import palette from '../../../foundations/palette'
@@ -35,44 +36,55 @@ function SelectedPurchasedGoodsTable({
     )
   }
   return (
-    <div>
-      <div css={gridStyle}>
-        <div>ID</div>
-        <div>상품명</div>
-        <div>구매처</div>
-        <div>보유재고</div>
-        <div>구매단가</div>
-        <div>사용수량</div>
-        <div>원가</div>
-        <div>원가세액</div>
-        <div>원가가격</div>
+    <table css={tableStyle}>
+      <thead>
+        <tr>
+          <th>상품ID</th>
+          <th>상품명</th>
+          <th>구매처</th>
+          <th>보유재고</th>
+          <th>구매단가</th>
+          <th>사용 수량</th>
+          <th>사용 원가</th>
+          <th>사용 세액</th>
+          <th>사용 합계</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
         {results.map((result) => (
-          <React.Fragment key={result.id}>
-            <div>{result.id}</div>
-            <div>{result.supplied_name}</div>
-            <div>{result.account.name}</div>
-            <div>{result.stock}</div>
-            <div>{result.purchase_value.toLocaleString()}</div>
-            <input
-              value={result.useStock.toLocaleString()}
-              onChange={(e) => onChangeUseStock(e.target.value, result.id)}
-            />
-            <div>{result.cost_value.toLocaleString()}</div>
-            <div>{result.cost_vat.toLocaleString()}</div>
-            <div>{result.cost_price.toLocaleString()}</div>
-          </React.Fragment>
+          <tr key={result.id}>
+            <td>{result.id}</td>
+            <td>{result.supplied_name}</td>
+            <td>{result.account.name}</td>
+            <td>{result.stock}</td>
+            <td>{result.purchase_value.toLocaleString()}</td>
+            <td>
+              <input
+                value={result.useStock.toLocaleString()}
+                onChange={(e) => onChangeUseStock(e.target.value, result.id)}
+              />
+            </td>
+            <td>{result.cost_value.toLocaleString()}</td>
+            <td>{result.cost_vat.toLocaleString()}</td>
+            <td>{result.cost_price.toLocaleString()}</td>
+            <td>
+              <BiTrashAlt />
+            </td>
+          </tr>
         ))}
-        <div css={test}></div>
-        <div css={test}></div>
-        <div css={test}></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div>{costValueSum.toLocaleString()}</div>
-        <div>{costVatSum.toLocaleString()}</div>
-        <div>{costPriceSum.toLocaleString()}</div>
-      </div>
-    </div>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colSpan={6}>합계</td>
+
+          <td>{costValueSum.toLocaleString()}</td>
+          <td>{costVatSum.toLocaleString()}</td>
+          <td>{costPriceSum.toLocaleString()}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
   )
 }
 
@@ -92,6 +104,31 @@ const gridStyle = css`
     border-left: 1px solid ${palette.base['base']};
   }
 `
-const test = css`
-  border-bottom: 1px solid red;
+
+const tableStyle = css`
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+  text-align: center;
+  td,
+  th {
+    height: 2.25rem;
+    padding: 0 0.5rem;
+  }
+  thead {
+    border-bottom: 1px solid ${palette.base['line']};
+  }
+  tbody tr {
+    border-bottom: 1px solid ${palette.base['line']};
+  }
+  tfoot {
+    border-bottom: 1px solid ${palette.base['line']};
+  }
+  input {
+    width: 3rem;
+    background: none;
+    border: none;
+    text-align: center;
+    font-size: 0.75rem;
+    margin-top: 3px;
+  }
 `

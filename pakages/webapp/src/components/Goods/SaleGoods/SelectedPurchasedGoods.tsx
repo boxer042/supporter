@@ -63,7 +63,7 @@ function SelectedPurchasedGoods({
   return (
     <div css={formStyle}>
       <div css={formItem}>
-        <div css={label}>구매상품</div>
+        <div css={label}>구매상품 연결</div>
         <PurchaseGoodsAppendSearchedPurchaseGoods
           keyword={suppliedName}
           setKeyword={setSuppliedName}
