@@ -1,6 +1,6 @@
 import client from './../../lib/api/client'
 import { useQuery } from 'react-query'
-import { PurchaseGoods } from '../types/Purchase'
+import { PurchaseGoods } from '../../lib/types/Purchase'
 
 async function getPurchaseGoodsByKeyword(keyword: string) {
   const { data } = await client.get<PurchaseGoods[]>('api/purchase/search', {

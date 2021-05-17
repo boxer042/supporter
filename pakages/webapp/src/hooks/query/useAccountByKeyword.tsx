@@ -1,4 +1,4 @@
-import { Account } from '../types/Account'
+import { Account } from '../../lib/types/Account'
 import client from './../../lib/api/client'
 import { useQuery } from 'react-query'
 

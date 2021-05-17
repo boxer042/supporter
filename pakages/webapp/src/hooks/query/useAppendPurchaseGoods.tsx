@@ -1,4 +1,4 @@
-import { AppendPurchaseGoods } from '../types/Purchase'
+import { AppendPurchaseGoods } from '../../lib/types/Purchase'
 import client from './../../lib/api/client'
 import { useMutation, useQuery } from 'react-query'
 

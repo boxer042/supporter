@@ -1,5 +1,5 @@
 import React from 'react'
-import { Purchased } from '../../../hooks/types/Purchase'
+import { Purchased } from '../../../lib/types/Purchase'
 import moment from 'moment'
 import { css } from '@emotion/react'
 import palette from '../../../foundations/palette'

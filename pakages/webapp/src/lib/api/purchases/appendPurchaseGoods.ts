@@ -1,4 +1,4 @@
-import { AppendPurchaseGoods } from '../../../hooks/types/Purchase'
+import { AppendPurchaseGoods } from '../../types/Purchase'
 import client from './../client'
 
 export default async function appendPurchaseGoods(form: AppendPurchaseGoods) {

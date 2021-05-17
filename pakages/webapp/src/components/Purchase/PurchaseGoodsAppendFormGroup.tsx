@@ -22,9 +22,8 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
   const [accountName, setAccountName] = useState('')
   const [accountId, setAccountId] = useState<number | null>(null)
   const [suppliedName, setSuppliedName] = useState('')
-  const [totalSuppliedValueDiscount, setTotalSuppliedValueDiscount] = useState(
-    '0'
-  )
+  const [totalSuppliedValueDiscount, setTotalSuppliedValueDiscount] =
+    useState('0')
   const selectedGoods = useSelectedGoodsValueState()
 
   // console.log(moment('2021-05-11T10:00:49.350Z').format('LLLLL'))
@@ -85,7 +84,8 @@ function PurchaseGoodsAppendFormGroup({}: PurchaseGoodsAppendFormGroupProps) {
       suppliedValue: selectedGoods.supplied_value.toLocaleString(),
       suppliedVat: selectedGoods.supplied_vat.toLocaleString(),
       suppliedPrice: selectedGoods.supplied_price.toLocaleString(),
-      suppliedValueDiscount: selectedGoods.supplied_value_discount.toLocaleString(),
+      suppliedValueDiscount:
+        selectedGoods.supplied_value_discount.toLocaleString(),
     })
   }, [selectedGoods])
 

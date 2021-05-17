@@ -55,7 +55,7 @@ function SelectedPurchasedGoodsTable({
         {results.map((result) => (
           <tr key={result.id}>
             <td>{result.id}</td>
-            <td>{result.supplied_name}</td>
+            <td style={{ width: '25%' }}>{result.supplied_name}</td>
             <td>{result.account.name}</td>
             <td>{result.stock}</td>
             <td>{result.purchase_value.toLocaleString()}</td>
@@ -90,22 +90,8 @@ function SelectedPurchasedGoodsTable({
 
 export default SelectedPurchasedGoodsTable
 
-const gridStyle = css`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  border-top: 1px solid ${palette.base['base']};
-  border-right: 1px solid ${palette.base['base']};
-  input {
-    outline: none;
-    width: 100%;
-  }
-  div {
-    border-bottom: 1px solid ${palette.base['base']};
-    border-left: 1px solid ${palette.base['base']};
-  }
-`
-
 const tableStyle = css`
+  width: 100%;
   margin-top: 0.5rem;
   border-collapse: collapse;
   text-align: center;

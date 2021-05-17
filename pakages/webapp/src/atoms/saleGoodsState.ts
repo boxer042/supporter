@@ -1,4 +1,10 @@
-import { atom, selector, useRecoilState } from 'recoil'
+import {
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil'
 
 export const selectedPurchasedGoodsListState = atom<
   SelectedPurchasedGoodsType[]
@@ -20,6 +26,10 @@ export type SelectedPurchasedGoodsType = {
     name: string
   }
   useStock: number
+}
+
+export function useSelectedPurchasedGoodsListState() {
+  return useRecoilState(selectedPurchasedGoodsListState)
 }
 
 export const selectedPurchasedGoodsListStateState = selector({
@@ -50,6 +60,51 @@ export const selectedPurchasedGoodsListStateState = selector({
   },
 })
 
-export function useSelectedPurchasedGoodsListState() {
-  return useRecoilState(selectedPurchasedGoodsListState)
+export const saleGoodsState = atom<saleGoodsType>({
+  key: 'saleGoodsState',
+  default: {
+    id: null,
+    name: '',
+    memo: '',
+    purchased_goods: [],
+  },
+})
+
+export type saleGoodsType = {
+  id?: number | null
+  name: string
+  memo: string
+  purchased_goods: {
+    id: number | null
+    supplied_name: string
+  }[]
+
+  //   apply_purchased_value: number
+  //   apply_purchased_vat: number
+  //   apply_purchased_price: number
+  //   sale_value: number
+  //   sale_vat: number
+  //   sale_price: number
+  //   margin: number
+  //   margin_card: number
+  //   margin_rate: number
+  //   margin_card_rate: number
+  //   card_fee: number
+}
+
+export const saleGoodsSelector = selector({
+  key: 'saleGoodsSelector',
+  get: ({ get }) => {
+    const goodsResult = get(saleGoodsState)
+    return { goodsResult }
+  },
+  //  \\ set: ({ set }, newValue) => {},
+})
+
+export function useGetSaleGoodsSelector() {
+  return useRecoilValue(saleGoodsSelector)
+}
+
+export function useSetSaleGoodsState() {
+  return useSetRecoilState(saleGoodsState)
 }

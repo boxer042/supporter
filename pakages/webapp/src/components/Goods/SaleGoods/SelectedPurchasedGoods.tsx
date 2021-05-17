@@ -6,22 +6,26 @@ import {
 } from '../../../atoms/purchaseState'
 import PurchaseGoodsAppendSearchedPurchaseGoods from '../../Purchase/PurchaseGoodsAppendSearchedPurchaseGoods'
 import {
+  saleGoodsType,
   SelectedPurchasedGoodsType,
-  useSelectedPurchasedGoodsListState,
+  useSetSaleGoodsState,
 } from '../../../atoms/saleGoodsState'
 import { SetterOrUpdater } from 'recoil'
 
 export type SelectedPurchasedGoodsProps = {
+  goodsResult: saleGoodsType
   purchasedGoodsList: SelectedPurchasedGoodsType[]
   setPurchasedGoodsList: SetterOrUpdater<SelectedPurchasedGoodsType[]>
 }
 
 function SelectedPurchasedGoods({
+  goodsResult,
   purchasedGoodsList,
   setPurchasedGoodsList,
 }: SelectedPurchasedGoodsProps) {
   const [suppliedName, setSuppliedName] = useState('')
   const selectedPurchasedGoods = useSelectedGoodsValueState()
+  const setSaleGoods = useSetSaleGoodsState()
   const resetSelectedPurchaseGoods = useResetSelectedGoodsState()
 
   useEffect(() => {
@@ -51,11 +55,23 @@ function SelectedPurchasedGoods({
         useStock: 1,
       },
     ])
+
+    setSaleGoods({
+      ...goodsResult,
+      purchased_goods: [
+        ...goodsResult.purchased_goods,
+        {
+          id: selectedPurchasedGoods.id,
+          supplied_name: selectedPurchasedGoods.supplied_name,
+        },
+      ],
+    })
     setSuppliedName('')
     resetSelectedPurchaseGoods()
   }, [
     selectedPurchasedGoods,
     setPurchasedGoodsList,
+    setSaleGoods,
     resetSelectedPurchaseGoods,
     purchasedGoodsList,
   ])

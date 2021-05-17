@@ -1,6 +1,6 @@
 import client from '../../lib/api/client'
 import { useQuery } from 'react-query'
-import { Purchased } from '../types/Purchase'
+import { Purchased } from '../../lib/types/Purchase'
 
 async function getPurchased() {
   const { data } = await client.get<Purchased[]>('api/purchase/purchased')

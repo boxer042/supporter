@@ -14,7 +14,7 @@ import {
 } from '../../atoms/purchaseState'
 import palette from '../../foundations/palette'
 import usePurchaseGoodsByKeyword from '../../hooks/query/usePurchaseGoodsByKeyword'
-import { PurchaseGoods } from '../../hooks/types/Purchase'
+import { PurchaseGoods } from '../../lib/types/Purchase'
 import PrimaryInput from '../PrimaryInput/PrimaryInput'
 import { usePurchaseGoodsState } from '../../atoms/purchaseState'
 
