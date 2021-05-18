@@ -317,9 +317,9 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
       const accountExist = await accountsRepo.findOne(account_id)
 
       if (!accountExist) {
-        reply.status(500)
+        reply.status(404)
         reply.send({
-          code: 500,
+          code: 404,
           error: 'AccountNotFoundError',
           message: 'Account Not Founded',
         })

@@ -56,7 +56,12 @@ export const selectedPurchasedGoodsListStateState = selector({
     const costValueSum = costValue.reduce((a, b) => a + b, 0)
     const costVatSum = costVat.reduce((a, b) => a + b, 0)
     const costPriceSum = costPrice.reduce((a, b) => a + b, 0)
-    return { results, costValueSum, costVatSum, costPriceSum }
+
+    const validStockCal = results.map(
+      (result) => result.stock / result.useStock
+    )
+    const validStockResult = Math.floor(Math.min(...validStockCal))
+    return { results, costValueSum, costVatSum, costPriceSum, validStockResult }
   },
 })
 
@@ -67,6 +72,17 @@ export const saleGoodsState = atom<saleGoodsType>({
     name: '',
     memo: '',
     purchased_goods: [],
+    apply_purchased_value: 0,
+    apply_purchased_vat: 0,
+    apply_purchased_price: 0,
+    sale_value: 0,
+    sale_vat: 0,
+    sale_price: 0,
+    margin: 0,
+    margin_card: 0,
+    margin_rate: 0,
+    margin_card_rate: 0,
+    card_fee: 0,
   },
 })
 
@@ -77,19 +93,19 @@ export type saleGoodsType = {
   purchased_goods: {
     id: number | null
     supplied_name: string
+    useStock: number
   }[]
-
-  //   apply_purchased_value: number
-  //   apply_purchased_vat: number
-  //   apply_purchased_price: number
-  //   sale_value: number
-  //   sale_vat: number
-  //   sale_price: number
-  //   margin: number
-  //   margin_card: number
-  //   margin_rate: number
-  //   margin_card_rate: number
-  //   card_fee: number
+  apply_purchased_value: number
+  apply_purchased_vat: number
+  apply_purchased_price: number
+  sale_value: number
+  sale_vat: number
+  sale_price: number
+  margin: number
+  margin_card: number
+  margin_rate: number
+  margin_card_rate: number
+  card_fee: number
 }
 
 export const saleGoodsSelector = selector({

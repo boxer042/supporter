@@ -38,6 +38,7 @@ function SelectedPurchasedGoods({
     if (exist) {
       return console.log('중복')
     }
+
     setPurchasedGoodsList((prevList) => [
       ...prevList,
       {
@@ -63,6 +64,7 @@ function SelectedPurchasedGoods({
         {
           id: selectedPurchasedGoods.id,
           supplied_name: selectedPurchasedGoods.supplied_name,
+          useStock: 1,
         },
       ],
     })

@@ -2,23 +2,30 @@ import { css } from '@emotion/react'
 import React, { useState } from 'react'
 import { BiTrash, BiTrashAlt } from 'react-icons/bi'
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil'
-import { SelectedPurchasedGoodsType } from '../../../atoms/saleGoodsState'
+import {
+  saleGoodsType,
+  SelectedPurchasedGoodsType,
+  useSetSaleGoodsState,
+} from '../../../atoms/saleGoodsState'
 import palette from '../../../foundations/palette'
 import { selectedPurchasedGoodsListStateState } from './../../../atoms/saleGoodsState'
 
 export type SelectedPurchasedGoodsTableProps = {
   purchasedGoodsList: SelectedPurchasedGoodsType[]
   setPurchasedGoodsList: SetterOrUpdater<SelectedPurchasedGoodsType[]>
+  goodsResult: saleGoodsType
 }
 
 function SelectedPurchasedGoodsTable({
   purchasedGoodsList,
   setPurchasedGoodsList,
+  goodsResult,
 }: SelectedPurchasedGoodsTableProps) {
-  // const [useStock, setUseStock] = useState('')
   const { results, costValueSum, costVatSum, costPriceSum } = useRecoilValue(
     selectedPurchasedGoodsListStateState
   )
+  const setSaleGoods = useSetSaleGoodsState()
+
   const onChangeUseStock = (value: string, id: number) => {
     const number = parseInt(value.replace(/\$\s?|(,*)/g, ''))
     if (isNaN(number)) {
@@ -34,7 +41,21 @@ function SelectedPurchasedGoodsTable({
         goods.id === id ? { ...goods, useStock: number } : goods
       )
     )
+    const setUseStock = goodsResult.purchased_goods.map((item) =>
+      item.id === id ? { ...item, useStock: number } : item
+    )
+    setSaleGoods({ ...goodsResult, purchased_goods: setUseStock })
   }
+
+  const onDeleteItem = (id: number) => {
+    setPurchasedGoodsList((prev) => prev.filter((item) => item.id !== id))
+    const deleteResult = goodsResult.purchased_goods.filter(
+      (item) => item.id !== id
+    )
+    setSaleGoods({ ...goodsResult, purchased_goods: deleteResult })
+    console.log('삭제 : ', id)
+  }
+
   return (
     <table css={tableStyle}>
       <thead>
@@ -69,7 +90,7 @@ function SelectedPurchasedGoodsTable({
             <td>{result.cost_vat.toLocaleString()}</td>
             <td>{result.cost_price.toLocaleString()}</td>
             <td>
-              <BiTrashAlt />
+              <BiTrashAlt onClick={() => onDeleteItem(result.id)} />
             </td>
           </tr>
         ))}
@@ -116,5 +137,8 @@ const tableStyle = css`
     text-align: center;
     font-size: 0.75rem;
     margin-top: 3px;
+  }
+  svg {
+    cursor: pointer;
   }
 `

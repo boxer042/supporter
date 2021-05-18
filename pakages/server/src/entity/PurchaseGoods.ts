@@ -10,6 +10,7 @@ import {
 import { Account } from './Account'
 import { Purchase } from './Purchase'
 import { PurchasePriceHistory } from './PurchasePriceHistory'
+import { SaleGoods } from './SaleGoods'
 
 @Entity()
 export class PurchaseGoods {
@@ -59,4 +60,7 @@ export class PurchaseGoods {
 
   @OneToMany((type) => Purchase, (purchase) => purchase.supplied_name)
   purchase: Purchase[]
+
+  @ManyToOne((type) => SaleGoods, (saleGoods) => saleGoods.purchased_goods)
+  sale_goods: SaleGoods
 }

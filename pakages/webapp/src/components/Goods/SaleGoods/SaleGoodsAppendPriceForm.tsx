@@ -2,34 +2,40 @@ import { css } from '@emotion/react'
 import React, { useEffect, useState } from 'react'
 import PrimaryInput from '../../PrimaryInput/PrimaryInput'
 import { replaceStringNumInt } from '../../../lib/api/utils/replaceStringNumInt'
+import { SetterOrUpdater } from 'recoil'
+import {
+  saleGoodsType,
+  SelectedPurchasedGoodsType,
+} from '../../../atoms/saleGoodsState'
 
 export type SaleGoodsAppendPriceFormProps = {
   costValueSum: number
   costVatSum: number
   costPriceSum: number
+  goodsResult: saleGoodsType
+  setSaleGoods: SetterOrUpdater<saleGoodsType>
 }
 
 function SaleGoodsAppendPriceForm({
   costValueSum,
   costVatSum,
   costPriceSum,
+  goodsResult,
+  setSaleGoods,
 }: SaleGoodsAppendPriceFormProps) {
-  const [recentInputs, setRecentInputs] = useState({
-    recentValue: '0',
-    recentVat: '0',
-    recentPrice: '0',
+  const [applyInputs, setapplyInputs] = useState({
+    applyValue: '0',
+    applyVat: '0',
+    applyPrice: '0',
   })
 
-  const [margin, setMargin] = useState('0')
-  const [marginCard, setMarginCard] = useState('0')
   const [marginRate, setMarginRate] = useState('0')
   const [marginCardRate, setMarginCardRate] = useState('0')
   const [saleValue, setSaleValue] = useState('0')
   const [salePrice, setSalePrice] = useState('0')
-  const [cardFee, setCardFee] = useState('0')
   const [cardFeeRate, setCardFeeRate] = useState('0.008')
 
-  const { recentValue, recentVat, recentPrice } = recentInputs
+  const { applyValue, applyVat, applyPrice } = applyInputs
 
   const marginCal = (replaceStringNumInt(saleValue) - costValueSum)
     .toFixed()
@@ -61,17 +67,41 @@ function SaleGoodsAppendPriceForm({
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
   useEffect(() => {
-    if (!costValueSum && !costVatSum && !costPriceSum) {
-      return
-    }
-    setRecentInputs({
-      recentValue: costValueSum.toLocaleString(),
-      recentVat: costVatSum.toLocaleString(),
-      recentPrice: costPriceSum.toLocaleString(),
+    setapplyInputs({
+      applyValue: costValueSum.toLocaleString(),
+      applyVat: costVatSum.toLocaleString(),
+      applyPrice: costPriceSum.toLocaleString(),
     })
   }, [costValueSum, costVatSum, costPriceSum])
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    setSaleGoods({
+      ...goodsResult,
+      apply_purchased_value: replaceStringNumInt(applyValue),
+      apply_purchased_vat: replaceStringNumInt(applyVat),
+      apply_purchased_price: replaceStringNumInt(applyPrice),
+      sale_value: replaceStringNumInt(saleValue),
+      sale_vat: replaceStringNumInt(saleVatCal),
+      sale_price: replaceStringNumInt(salePrice),
+      margin: replaceStringNumInt(marginCal),
+      margin_card: replaceStringNumInt(marginCardCal),
+      margin_rate: parseFloat(marginRate.replace(/\$\s?|(,*)/g, '')),
+      margin_card_rate: parseFloat(marginCardRate.replace(/\$\s?|(,*)/g, '')),
+      card_fee: replaceStringNumInt(cardFeeCal),
+    })
+  }, [
+    applyValue,
+    applyVat,
+    applyPrice,
+    saleValue,
+    saleVatCal,
+    salePrice,
+    marginCal,
+    marginCardCal,
+    marginRate,
+    marginCardRate,
+    cardFeeCal,
+  ])
 
   const onChangeMarginRate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
@@ -130,31 +160,26 @@ function SaleGoodsAppendPriceForm({
 
   return (
     <div css={block}>
-      <div css={recentForm}>
+      <div css={applyForm}>
         <div css={item}>
-          <div>현재 매입가액</div>
+          <div>구매가액</div>
           <PrimaryInput
             prefix="￦"
-            name="recentValue"
-            value={recentValue}
+            name="applyValue"
+            value={applyValue}
             readOnly
           />
         </div>
         <div css={item}>
-          <div>현재 매입세액</div>
-          <PrimaryInput
-            prefix="￦"
-            name="recentVat"
-            value={recentVat}
-            readOnly
-          />
+          <div>구매세액</div>
+          <PrimaryInput prefix="￦" name="applyVat" value={applyVat} readOnly />
         </div>
         <div css={item}>
-          <div>현재 매입가격</div>
+          <div>구매가격</div>
           <PrimaryInput
             prefix="￦"
-            name="recentPrice"
-            value={recentPrice}
+            name="applyPrice"
+            value={applyPrice}
             readOnly
           />
         </div>
@@ -233,7 +258,7 @@ export default SaleGoodsAppendPriceForm
 const block = css`
   margin-top: 2rem;
 `
-const recentForm = css`
+const applyForm = css`
   display: flex;
 `
 const marginStyle = css`

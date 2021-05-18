@@ -8,13 +8,18 @@ import {
 
 export type SaleGoodsAppendFormProps = {
   goodsResult: saleGoodsType
+  validStockResult: number
 }
 
-function SaleGoodsAppendForm({ goodsResult }: SaleGoodsAppendFormProps) {
+function SaleGoodsAppendForm({
+  goodsResult,
+  validStockResult,
+}: SaleGoodsAppendFormProps) {
   const setSaleGoods = useSetSaleGoodsState()
 
   const [name, setName] = useState('')
   const [memo, setMemo] = useState('')
+  const [validStock, setValidStock] = useState(0)
 
   useEffect(() => {
     setSaleGoods({
@@ -23,6 +28,13 @@ function SaleGoodsAppendForm({ goodsResult }: SaleGoodsAppendFormProps) {
       memo: memo,
     })
   }, [name, memo])
+
+  useEffect(() => {
+    if (validStockResult === Infinity) {
+      return setValidStock(0)
+    }
+    setValidStock(validStockResult)
+  }, [validStockResult])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -60,6 +72,15 @@ function SaleGoodsAppendForm({ goodsResult }: SaleGoodsAppendFormProps) {
           value={memo}
           onChange={onChange}
           clearButton
+        />
+      </div>
+      <div css={item}>
+        <div css={itemLabel}>유효재고</div>
+        <PrimaryInput
+          css={itemInput}
+          name="validStock"
+          value={validStock}
+          readOnly
         />
       </div>
     </div>

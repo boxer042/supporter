@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil'
 import {
   useGetSaleGoodsSelector,
   useSelectedPurchasedGoodsListState,
+  useSetSaleGoodsState,
 } from '../../../atoms/saleGoodsState'
 import SelectedPurchasedGoods from './SelectedPurchasedGoods'
 import SelectedPurchasedGoodsTable from './SelectedPurchasedGoodsTable'
@@ -11,6 +12,8 @@ import { selectedPurchasedGoodsListStateState } from './../../../atoms/saleGoods
 import SaleGoodsAppendPriceForm from './SaleGoodsAppendPriceForm'
 import SaleGoodsAppendForm from './SaleGoodsAppendForm'
 import palette from '../../../foundations/palette'
+import PrimaryButton from '../../PrimaryButton/PrimaryButton'
+import createSaleGoods from '../../../lib/api/goods/createSaleGoods'
 
 export type SaleGoodsAppendProps = {}
 
@@ -18,24 +21,30 @@ function SaleGoodsAppend({}: SaleGoodsAppendProps) {
   const [purchasedGoodsList, setPurchasedGoodsList] =
     useSelectedPurchasedGoodsListState()
 
-  const { results, costValueSum, costVatSum, costPriceSum } = useRecoilValue(
-    selectedPurchasedGoodsListStateState
-  )
+  const { results, costValueSum, costVatSum, costPriceSum, validStockResult } =
+    useRecoilValue(selectedPurchasedGoodsListStateState)
 
   const { goodsResult } = useGetSaleGoodsSelector()
+  const setSaleGoods = useSetSaleGoodsState()
 
-  console.log(goodsResult)
-  useEffect(() => {
-    if (!results) {
-      return
-    }
-  }, [results])
+  const onClickSave = () => {
+    console.log(goodsResult)
+    const purchasedId = goodsResult.purchased_goods.map((result) => result.id)
+    createSaleGoods({
+      name: goodsResult.name,
+      memo: goodsResult.memo,
+      purchased_goods: purchasedId,
+    })
+  }
 
   return (
     <div css={block}>
-      <h1>판매상품 등록</h1>
+      <h1>상품 등록</h1>
       <div css={leftBlock}>
-        <SaleGoodsAppendForm goodsResult={goodsResult} />
+        <SaleGoodsAppendForm
+          goodsResult={goodsResult}
+          validStockResult={validStockResult}
+        />
         <div css={divider}>
           <hr />
         </div>
@@ -45,6 +54,7 @@ function SaleGoodsAppend({}: SaleGoodsAppendProps) {
           setPurchasedGoodsList={setPurchasedGoodsList}
         />
         <SelectedPurchasedGoodsTable
+          goodsResult={goodsResult}
           purchasedGoodsList={purchasedGoodsList}
           setPurchasedGoodsList={setPurchasedGoodsList}
         />
@@ -52,8 +62,11 @@ function SaleGoodsAppend({}: SaleGoodsAppendProps) {
           costValueSum={costValueSum}
           costVatSum={costVatSum}
           costPriceSum={costPriceSum}
+          goodsResult={goodsResult}
+          setSaleGoods={setSaleGoods}
         />
       </div>
+      <PrimaryButton onClick={onClickSave}>추가</PrimaryButton>
     </div>
   )
 }

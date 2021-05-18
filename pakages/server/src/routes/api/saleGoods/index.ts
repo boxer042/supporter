@@ -45,8 +45,6 @@ const saleGoodsRoute: FastifyPluginCallback = (fastify, apts, done) => {
       const createSaleGoods = new SaleGoods()
       createSaleGoods.name = name
       createSaleGoods.memo = memo
-      const test = createSaleGoods.purchased_goods.map((item) => (item.goods)
-      test = ''
 
       await saleGoodsRepo.save(createSaleGoods)
       reply.send(createSaleGoods)
