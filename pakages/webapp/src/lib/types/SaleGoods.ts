@@ -1,18 +1,21 @@
 export interface IAppendSaleGoods {
   name: string
   memo: string
-  purchased_goods: (number | null)[]
-  //   apply_purchased_value: number
-  //   apply_purchased_vat: number
-  //   apply_purchased_price: number
-  //   sale_value: number
-  //   sale_vat: number
-  //   sale_price: number
-  //   margin: number
-  //   margin_card: number
-  //   margin_rate: number
-  //   margin_card_rate: number
-  //   card_fee: number
+  purchased_goods: {
+    purchased_id: number
+    use_stock: number
+  }[]
+  apply_purchased_value: number
+  apply_purchased_vat: number
+  apply_purchased_price: number
+  sale_value: number
+  sale_vat: number
+  sale_price: number
+  margin: number
+  margin_card: number
+  margin_rate: number
+  margin_card_rate: number
+  card_fee: number
 }
 
 export interface IPurchasedGoodsPurchase {

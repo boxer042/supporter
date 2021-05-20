@@ -88,6 +88,7 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
     //  .getMany();
     reply.send(purchaseGoods)
   })
+
   // 상품 구매 현황(전제보기)
   fastify.get('/purchased', async (request, reply) => {
     const purchased = await purchaseRepo.find({
@@ -99,7 +100,13 @@ const purchaseRoute: FastifyPluginCallback = (fastify, apts, done) => {
   fastify.get<{ Params: { id: number } }>('/:id', async (request, reply) => {
     const purchaseProductId = request.params.id
     const purchaseProduct = await purchaseGoodsRepo.findOne(purchaseProductId, {
-      relations: ['account', 'account.metadata', 'purchase', 'price_history'],
+      relations: [
+        'account',
+        'account.metadata',
+        'purchase',
+        'price_history',
+        'sale_goods',
+      ],
     })
 
     reply.send(purchaseProduct)

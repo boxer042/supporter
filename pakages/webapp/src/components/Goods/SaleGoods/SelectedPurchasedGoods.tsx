@@ -62,9 +62,9 @@ function SelectedPurchasedGoods({
       purchased_goods: [
         ...goodsResult.purchased_goods,
         {
-          id: selectedPurchasedGoods.id,
-          supplied_name: selectedPurchasedGoods.supplied_name,
-          useStock: 1,
+          purchased_id: selectedPurchasedGoods.id,
+
+          use_stock: 1,
         },
       ],
     })

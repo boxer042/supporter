@@ -42,7 +42,7 @@ function SelectedPurchasedGoodsTable({
       )
     )
     const setUseStock = goodsResult.purchased_goods.map((item) =>
-      item.id === id ? { ...item, useStock: number } : item
+      item.purchased_id === id ? { ...item, useStock: number } : item
     )
     setSaleGoods({ ...goodsResult, purchased_goods: setUseStock })
   }
@@ -50,7 +50,7 @@ function SelectedPurchasedGoodsTable({
   const onDeleteItem = (id: number) => {
     setPurchasedGoodsList((prev) => prev.filter((item) => item.id !== id))
     const deleteResult = goodsResult.purchased_goods.filter(
-      (item) => item.id !== id
+      (item) => item.purchased_id !== id
     )
     setSaleGoods({ ...goodsResult, purchased_goods: deleteResult })
     console.log('삭제 : ', id)

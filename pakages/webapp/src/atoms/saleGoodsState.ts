@@ -91,9 +91,8 @@ export type saleGoodsType = {
   name: string
   memo: string
   purchased_goods: {
-    id: number | null
-    supplied_name: string
-    useStock: number
+    purchased_id: number
+    use_stock: number
   }[]
   apply_purchased_value: number
   apply_purchased_vat: number

@@ -8,6 +8,7 @@ import {
 } from 'typeorm'
 
 import { Account } from './Account'
+import { ConnectGoods } from './ConnectGoods'
 import { Purchase } from './Purchase'
 import { PurchasePriceHistory } from './PurchasePriceHistory'
 import { SaleGoods } from './SaleGoods'
@@ -61,6 +62,12 @@ export class PurchaseGoods {
   @OneToMany((type) => Purchase, (purchase) => purchase.supplied_name)
   purchase: Purchase[]
 
-  @ManyToOne((type) => SaleGoods, (saleGoods) => saleGoods.purchased_goods)
-  sale_goods: SaleGoods
+  // @ManyToOne((type) => SaleGoods, (saleGoods) => saleGoods.purchased_goods)
+  // sale_goods: SaleGoods
+
+  @OneToMany(
+    (type) => ConnectGoods,
+    (connectGoods) => connectGoods.purchased_goods
+  )
+  connect_goods: ConnectGoods[]
 }

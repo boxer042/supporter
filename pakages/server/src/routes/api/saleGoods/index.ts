@@ -2,23 +2,31 @@ import { FastifyPluginCallback } from 'fastify'
 import { getRepository } from 'typeorm'
 import { PurchaseGoods } from './../../../entity/PurchaseGoods'
 import { SaleGoods } from './../../../entity/SaleGoods'
+import { ConnectGoods } from './../../../entity/ConnectGoods'
 
 const saleGoodsRoute: FastifyPluginCallback = (fastify, apts, done) => {
   const purchasedGoodsRepo = getRepository(PurchaseGoods)
   const saleGoodsRepo = getRepository(SaleGoods)
+  const connectGoodsRepo = getRepository(ConnectGoods)
+
   /**
    * POST /api/saleGoods/create
    * 상품 생성
    */
   fastify.post<{
     Body: {
-      purchased_goods: { purchased_id: number; useStock: number }[]
+      purchased_goods: {
+        purchased_id: number
+        use_stock: number
+      }[]
       name: string
       memo: string
     }
   }>('/create', async (request, reply) => {
     const { purchased_goods, name, memo } = request.body
-    const purchased_id = purchased_goods.map((result) => result.purchased_id)
+
+    const purchased_id = purchased_goods.map((id) => id.purchased_id)
+    const use_stock = purchased_goods.map((stock) => stock.use_stock)
     try {
       // 구매상품 조회(id)
       const purchasedExists = await purchasedGoodsRepo.findByIds(purchased_id, {
@@ -42,10 +50,23 @@ const saleGoodsRoute: FastifyPluginCallback = (fastify, apts, done) => {
         })
         return
       }
+
       const createSaleGoods = new SaleGoods()
       createSaleGoods.name = name
       createSaleGoods.memo = memo
 
+      await saleGoodsRepo.save(createSaleGoods)
+
+      const saleGoodsExist = await saleGoodsRepo.findOne({ name })
+      for (let i = 0; i < purchased_goods.length; i++) {
+        let connectGoods = new ConnectGoods()
+        connectGoods.sale_goods = saleGoodsExist
+        connectGoods.purchased_goods = purchasedExists[i]
+        connectGoods.use_stock = use_stock[i]
+
+        await connectGoodsRepo.save(connectGoods)
+      }
+      //   await connectGoodsRepo.save(connect)
       await saleGoodsRepo.save(createSaleGoods)
       reply.send(createSaleGoods)
     } catch (error) {
@@ -58,7 +79,10 @@ const saleGoodsRoute: FastifyPluginCallback = (fastify, apts, done) => {
    * 상품 전체불러오기
    */
   fastify.get('/', async (request, reply) => {
-    reply.send('/get')
+    const saleGoods = await saleGoodsRepo.find({
+      relations: ['purchased_goods', 'purchased_goods.purchased_goods'],
+    })
+    reply.send(saleGoods)
   })
   done()
 }

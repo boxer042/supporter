@@ -5,6 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
+import { ConnectGoods } from './ConnectGoods'
 import { PurchaseGoods } from './PurchaseGoods'
 
 @Entity()
@@ -56,8 +57,11 @@ export class SaleGoods {
   //     (type) => PurchaseGoods,
   //     (purchaseGoods) => purchaseGoods.sale_goods
   //   )
-  purchased_goods: {
-    goods: string
-    useStock: number
-  }[]
+  //   purchased_goods: {
+  //     goods: PurchaseGoods
+  //     use_stock: number
+  //   }[]
+
+  @OneToMany((type) => ConnectGoods, (connectGoods) => connectGoods.sale_goods)
+  purchased_goods: ConnectGoods[]
 }
