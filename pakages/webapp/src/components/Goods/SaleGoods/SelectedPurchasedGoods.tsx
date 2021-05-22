@@ -57,17 +57,17 @@ function SelectedPurchasedGoods({
       },
     ])
 
-    setSaleGoods({
-      ...goodsResult,
-      purchased_goods: [
-        ...goodsResult.purchased_goods,
-        {
-          purchased_id: selectedPurchasedGoods.id,
+    // setSaleGoods({
+    //   ...goodsResult,
+    //   purchased_goods: [
+    //     ...goodsResult.purchased_goods,
+    //     {
+    //       purchased_id: selectedPurchasedGoods.id,
 
-          use_stock: 1,
-        },
-      ],
-    })
+    //       use_stock: 1,
+    //     },
+    //   ],
+    // })
     setSuppliedName('')
     resetSelectedPurchaseGoods()
   }, [

@@ -2,8 +2,10 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
@@ -62,12 +64,16 @@ export class PurchaseGoods {
   @OneToMany((type) => Purchase, (purchase) => purchase.supplied_name)
   purchase: Purchase[]
 
+  @OneToOne((type) => SaleGoods, (saleGoods) => saleGoods.purchased_goods)
+  @JoinColumn()
+  sale_goods: SaleGoods
+
   // @ManyToOne((type) => SaleGoods, (saleGoods) => saleGoods.purchased_goods)
   // sale_goods: SaleGoods
 
-  @OneToMany(
-    (type) => ConnectGoods,
-    (connectGoods) => connectGoods.purchased_goods
-  )
-  connect_goods: ConnectGoods[]
+  // @OneToMany(
+  //   (type) => ConnectGoods,
+  //   (connectGoods) => connectGoods.purchased_goods
+  // )
+  // connect_goods: ConnectGoods[]
 }

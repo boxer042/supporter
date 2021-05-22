@@ -30,22 +30,22 @@ function SaleGoodsAppend({}: SaleGoodsAppendProps) {
   const onClickSave = () => {
     console.log(goodsResult)
 
-    createSaleGoods({
-      name: goodsResult.name,
-      memo: goodsResult.memo,
-      purchased_goods: goodsResult.purchased_goods,
-      apply_purchased_value: goodsResult.apply_purchased_value,
-      apply_purchased_vat: goodsResult.apply_purchased_vat,
-      apply_purchased_price: goodsResult.apply_purchased_price,
-      sale_value: goodsResult.sale_value,
-      sale_vat: goodsResult.sale_vat,
-      sale_price: goodsResult.sale_price,
-      margin: goodsResult.margin,
-      margin_card: goodsResult.margin_card,
-      margin_rate: goodsResult.margin_rate,
-      margin_card_rate: goodsResult.margin_card_rate,
-      card_fee: goodsResult.card_fee,
-    })
+    // createSaleGoods({
+    //   name: goodsResult.name,
+    //   memo: goodsResult.memo,
+    //   purchased_goods: goodsResult.purchased_goods,
+    //   apply_purchased_value: goodsResult.apply_purchased_value,
+    //   apply_purchased_vat: goodsResult.apply_purchased_vat,
+    //   apply_purchased_price: goodsResult.apply_purchased_price,
+    //   sale_value: goodsResult.sale_value,
+    //   sale_vat: goodsResult.sale_vat,
+    //   sale_price: goodsResult.sale_price,
+    //   margin: goodsResult.margin,
+    //   margin_card: goodsResult.margin_card,
+    //   margin_rate: goodsResult.margin_rate,
+    //   margin_card_rate: goodsResult.margin_card_rate,
+    //   card_fee: goodsResult.card_fee,
+    // })
   }
 
   return (

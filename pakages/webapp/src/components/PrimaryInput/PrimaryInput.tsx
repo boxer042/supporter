@@ -26,7 +26,7 @@ function PrimaryInput({
   return (
     <div css={base}>
       {prefix !== undefined && <div css={prefixStyle}>{prefix}</div>}
-      <input css={inputStyle} value={value} {...rest} />
+      <input css={inputStyle} value={value} autoComplete="off" {...rest} />
       {clearButton !== undefined && value !== '' && (
         <div css={clearStyle} onClick={onClear}>
           <BiX />

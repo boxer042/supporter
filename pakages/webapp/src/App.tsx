@@ -11,6 +11,8 @@ import PurchaseGoodsAppend from './components/Purchase/PurchaseGoodsAppend'
 import PurchaseList from './components/Purchase/Purchased/Purchased'
 import Goods from './pages/Goods/Goods'
 import SaleGoodsAppend from './components/Goods/SaleGoods/SaleGoodsAppend'
+import CreateSaleGoods from './components/Goods/CreateSaleGoods/CreateSaleGoods'
+import SaleGoodsList from './components/Goods/SaleGoodsList'
 function App() {
   return (
     <>
@@ -25,6 +27,7 @@ function App() {
             '/workspaces/purchase/purchasedgoods',
             '/workspaces/goods',
             '/workspaces/goods/saleGoods/append',
+            '/workspaces/goods/salegoods/create',
             '/workspaces/goods/purchasedgoods',
             '/reports',
             '/account',
@@ -52,6 +55,7 @@ function App() {
                     '/workspaces/purchase/purchasedgoods',
                     '/workspaces/goods',
                     '/workspaces/goods/salegoods/append',
+                    '/workspaces/goods/salegoods/create',
                     '/workspaces/goods/purchasedgoods',
                   ]}
                 >
@@ -95,18 +99,25 @@ function App() {
                           '/workspaces/goods',
                           '/workspaces/goods/salegoods/append',
                           '/workspaces/goods/purchasedgoods',
+                          '/workspaces/goods/salegoods/create',
                         ]}
                       >
                         <Goods>
                           <Switch>
                             <Route exact path="/workspaces/goods">
-                              ddd
+                              <SaleGoodsList />
                             </Route>
                             <Route
                               exact
                               path="/workspaces/goods/salegoods/append"
                             >
                               <SaleGoodsAppend />
+                            </Route>
+                            <Route
+                              exact
+                              path="/workspaces/goods/salegoods/create"
+                            >
+                              <CreateSaleGoods />
                             </Route>
                             <Route
                               exact

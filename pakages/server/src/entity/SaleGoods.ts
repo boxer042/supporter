@@ -3,6 +3,7 @@ import {
   Entity,
   Index,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { ConnectGoods } from './ConnectGoods'
@@ -18,7 +19,10 @@ export class SaleGoods {
   name: string
 
   @Column()
-  memo: string
+  brand: string
+
+  @Column()
+  type: string
 
   @Column({ default: 0 })
   apply_purchased_value: number
@@ -44,14 +48,23 @@ export class SaleGoods {
   @Column({ default: 0 })
   margin_card: number
 
-  @Column({ default: 0 })
+  @Column('float', { default: 0 })
   margin_rate: number
 
-  @Column({ default: 0 })
+  @Column('float', { default: 0 })
   margin_card_rate: number
 
   @Column({ default: 0 })
   card_fee: number
+
+  @OneToOne(
+    (type) => PurchaseGoods,
+    (purchaseGoods) => purchaseGoods.sale_goods,
+    {
+      cascade: true,
+    }
+  )
+  purchased_goods: PurchaseGoods
 
   //   @OneToMany(
   //     (type) => PurchaseGoods,
@@ -62,6 +75,6 @@ export class SaleGoods {
   //     use_stock: number
   //   }[]
 
-  @OneToMany((type) => ConnectGoods, (connectGoods) => connectGoods.sale_goods)
-  purchased_goods: ConnectGoods[]
+  //   @OneToMany((type) => ConnectGoods, (connectGoods) => connectGoods.sale_goods)
+  //   purchased_goods: ConnectGoods[]
 }
